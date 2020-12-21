@@ -19,10 +19,13 @@
 #                                                                          #
 ############################################################################
 
-add_custom_target(tests DEPENDS unit_tests ijprai2020 sspr2018 vldbj2020)
-add_subdirectory(unit_tests)
-add_subdirectory(sspr2018)
-add_subdirectory(ijprai2020)
-add_subdirectory(vldbj2020)
-add_subdirectory(pvldb2020)
-add_subdirectory(kazu)
+# Set executable path.
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/tests/kazu/bin)
+
+# Add targets.
+
+add_custom_target(kazu DEPENDS  kazu_test)
+
+add_executable(kazu_test src/main.cpp)
+target_link_libraries(kazu_test gxlgedlib)

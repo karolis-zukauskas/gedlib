@@ -25,7 +25,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/tests/vldbj2020/bin)
 
 # Add targets.
 
-add_custom_target(vldbj2020 DEPENDS vldbj_train_ring vldbj_train_walks vldbj_train_subgraph vldbj_train_ml vldbj_test_lsape_based_methods vldbj_test_best_methods)
+add_custom_target(vldbj2020 DEPENDS  vldbj_train_ring vldbj_train_walks vldbj_train_subgraph vldbj_train_ml vldbj_test_lsape_based_methods vldbj_test_best_methods)
 
 add_executable(vldbj_train_ring src/train_ring.cpp)
 target_link_libraries(vldbj_train_ring gxlgedlib)
