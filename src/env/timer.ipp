@@ -37,11 +37,11 @@ start_time_{std::chrono::high_resolution_clock::now()} {}
 bool
 Timer ::
 expired() const {
-	if (time_limit_in_sec_ > 0) {
-		std::chrono::duration<double> runtime = std::chrono::high_resolution_clock::now() - start_time_;
-		return (runtime.count() >= time_limit_in_sec_);
-	}
-	return false;
+  if (time_limit_in_sec_ > 0) {
+    std::chrono::duration<double> runtime = std::chrono::high_resolution_clock::now() - start_time_;
+    return (runtime.count() >= time_limit_in_sec_);
+  }
+  return false;
 }
 
 }

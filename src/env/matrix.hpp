@@ -38,168 +38,168 @@ template<class ScalarT>
 class Matrix {
 
 public:
-	/*!
-	 * @brief Constructs an empty cost matrix.
-	 */
-	Matrix();
+  /*!
+   * @brief Constructs an empty cost matrix.
+   */
+  Matrix();
 
-	/*!
-	 * @brief Constructs a matrix of given size with default entries.
-	 * @param[in] num_rows The number of rows.
-	 * @param[in] num_cols The number of columns.
-	 * @param[in] val The default value of all cells.
-	 */
-	Matrix(std::size_t num_rows, std::size_t num_cols, ScalarT val = 0);
+  /*!
+   * @brief Constructs a matrix of given size with default entries.
+   * @param[in] num_rows The number of rows.
+   * @param[in] num_cols The number of columns.
+   * @param[in] val The default value of all cells.
+   */
+  Matrix(std::size_t num_rows, std::size_t num_cols, ScalarT val = 0);
 
-	/*!
-	 * @brief Copy constructor.
-	 * @param[in] matrix Matrix that should be copied.
-	 */
-	Matrix(const Matrix & matrix);
+  /*!
+   * @brief Copy constructor.
+   * @param[in] matrix Matrix that should be copied.
+   */
+  Matrix(const Matrix & matrix);
 
-	/*!
-	 * @brief Assignment operator.
-	 * @param[in] matrix Matrix that should be assigned.
-	 */
-	void operator=(const Matrix & matrix);
+  /*!
+   * @brief Assignment operator.
+   * @param[in] matrix Matrix that should be assigned.
+   */
+  void operator=(const Matrix & matrix);
 
-	/*!
-	 * @brief Swaps the matrix with another matrix.
-	 * @param[in,out] matrix Matrix that is to be swapped with the calling matrix.
-	 */
-	void swap(Matrix& matrix);
+  /*!
+   * @brief Swaps the matrix with another matrix.
+   * @param[in,out] matrix Matrix that is to be swapped with the calling matrix.
+   */
+  void swap(Matrix& matrix);
 
-	/*!
-	 * @brief Provides access to a cell.
-	 * @param[in] row Row of the cell.
-	 * @param[in] col Column of the cell.
-	 * @return Constant reference to the cell (\p row,\p col).
-	 */
-	const ScalarT & operator() (std::size_t row, std::size_t col) const;
+  /*!
+   * @brief Provides access to a cell.
+   * @param[in] row Row of the cell.
+   * @param[in] col Column of the cell.
+   * @return Constant reference to the cell (\p row,\p col).
+   */
+  const ScalarT & operator() (std::size_t row, std::size_t col) const;
 
-	/*!
-	 * @brief Provides access to a cell.
-	 * @param[in] row Row of the cell.
-	 * @param[in] col Column of the cell.
-	 * @return Reference to the cell (\p row,\p col).
-	 */
-	ScalarT & operator() (std::size_t row, std::size_t col);
-
-
-	/*!
-	 * @brief Provides access to internal data.
-	 * @return Pointer to the data array.
-	 */
-	ScalarT * data();
-
-	/*!
-	 * @brief Provides constant access to internal data.
-	 * @return Constant pointer to the data array.
-	 */
-	const ScalarT * data() const;
+  /*!
+   * @brief Provides access to a cell.
+   * @param[in] row Row of the cell.
+   * @param[in] col Column of the cell.
+   * @return Reference to the cell (\p row,\p col).
+   */
+  ScalarT & operator() (std::size_t row, std::size_t col);
 
 
-	/*!
-	 * @brief Returns the number of rows.
-	 * @return The number of rows.
-	 */
-	std::size_t num_rows() const;
+  /*!
+   * @brief Provides access to internal data.
+   * @return Pointer to the data array.
+   */
+  ScalarT * data();
 
-	/*!
-	 * @brief Returns the number of columns.
-	 * @return The number of columns.
-	 */
-	std::size_t num_cols() const;
+  /*!
+   * @brief Provides constant access to internal data.
+   * @return Constant pointer to the data array.
+   */
+  const ScalarT * data() const;
 
-	/*!
-	 * @brief Resizes the matrix.
-	 * @param[in] num_rows New number of rows.
-	 * @param[in] num_cols New number of columns.
-	 */
-	void resize(std::size_t num_rows, std::size_t num_cols);
 
-	/*!
-	 * \brief Sets all cells to \p val.
-	 */
-	void set_to_val(const ScalarT & val);
+  /*!
+   * @brief Returns the number of rows.
+   * @return The number of rows.
+   */
+  std::size_t num_rows() const;
 
-	/*!
-	 * \brief Takes the matrix to the power of \p n.
-	 */
-	void power(std::size_t n);
+  /*!
+   * @brief Returns the number of columns.
+   * @return The number of columns.
+   */
+  std::size_t num_cols() const;
 
-	/*!
-	 * \brief Returns the maximal coefficient.
-	 */
-	ScalarT max() const;
+  /*!
+   * @brief Resizes the matrix.
+   * @param[in] num_rows New number of rows.
+   * @param[in] num_cols New number of columns.
+   */
+  void resize(std::size_t num_rows, std::size_t num_cols);
 
-	/*!
-	 * \brief Returns the minimal coefficient.
-	 */
-	ScalarT min() const;
+  /*!
+   * \brief Sets all cells to \p val.
+   */
+  void set_to_val(const ScalarT & val);
 
-	/*!
-	 * \brief Transposes the matrix.
-	 */
-	void transpose();
+  /*!
+   * \brief Takes the matrix to the power of \p n.
+   */
+  void power(std::size_t n);
 
-	/*!
-	 * \brief Returns the transposed matrix.
-	 */
-	Matrix<ScalarT> transposed() const;
+  /*!
+   * \brief Returns the maximal coefficient.
+   */
+  ScalarT max() const;
 
-	/*!
-	 * \brief Matrix-scalar multiplication assignment.
-	 */
-	Matrix<ScalarT> & operator*=(const ScalarT & scalar);
+  /*!
+   * \brief Returns the minimal coefficient.
+   */
+  ScalarT min() const;
 
-	/*!
-	 * \brief Matrix-scalar multiplication assignment.
-	 */
-	Matrix<ScalarT> & operator/=(const ScalarT & scalar);
+  /*!
+   * \brief Transposes the matrix.
+   */
+  void transpose();
 
-	/*!
-	 * \brief Matrix-matrix addition assignment.
-	 */
-	Matrix<ScalarT> & operator+=(const Matrix<ScalarT> & matrix);
+  /*!
+   * \brief Returns the transposed matrix.
+   */
+  Matrix<ScalarT> transposed() const;
 
-	/*!
-	 * \brief Matrix-matrix substraction assignment.
-	 */
-	Matrix<ScalarT> & operator-=(const Matrix<ScalarT> & matrix);
+  /*!
+   * \brief Matrix-scalar multiplication assignment.
+   */
+  Matrix<ScalarT> & operator*=(const ScalarT & scalar);
 
-	/*!
-	 * \brief Matrix-scalar multiplication.
-	 */
-	Matrix<ScalarT> operator*(const ScalarT & scalar) const;
+  /*!
+   * \brief Matrix-scalar multiplication assignment.
+   */
+  Matrix<ScalarT> & operator/=(const ScalarT & scalar);
 
-	/*!
-	 * \brief Matrix-scalar multiplication.
-	 */
-	Matrix<ScalarT> operator/(const ScalarT & scalar) const;
+  /*!
+   * \brief Matrix-matrix addition assignment.
+   */
+  Matrix<ScalarT> & operator+=(const Matrix<ScalarT> & matrix);
 
-	/*!
-	 * \brief Matrix-matrix addition.
-	 */
-	Matrix<ScalarT> operator+(const Matrix<ScalarT> & matrix) const;
+  /*!
+   * \brief Matrix-matrix substraction assignment.
+   */
+  Matrix<ScalarT> & operator-=(const Matrix<ScalarT> & matrix);
 
-	/*!
-	 * \brief Matrix-matrix addition.
-	 */
-	Matrix<ScalarT> operator-(const Matrix<ScalarT> & matrix) const;
+  /*!
+   * \brief Matrix-scalar multiplication.
+   */
+  Matrix<ScalarT> operator*(const ScalarT & scalar) const;
 
-	/*!
-	 * \brief Returns reference to the internal Eigen matrix.
-	 */
-	Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> & matrix();
+  /*!
+   * \brief Matrix-scalar multiplication.
+   */
+  Matrix<ScalarT> operator/(const ScalarT & scalar) const;
 
-	/*!
-	 * \brief Returns constant reference to the internal Eigen matrix.
-	 */
-	const Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> & matrix() const;
+  /*!
+   * \brief Matrix-matrix addition.
+   */
+  Matrix<ScalarT> operator+(const Matrix<ScalarT> & matrix) const;
+
+  /*!
+   * \brief Matrix-matrix addition.
+   */
+  Matrix<ScalarT> operator-(const Matrix<ScalarT> & matrix) const;
+
+  /*!
+   * \brief Returns reference to the internal Eigen matrix.
+   */
+  Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> & matrix();
+
+  /*!
+   * \brief Returns constant reference to the internal Eigen matrix.
+   */
+  const Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> & matrix() const;
 
 private:
-	Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> matrix_;
+  Eigen::Matrix<ScalarT, Eigen::Dynamic, Eigen::Dynamic> matrix_;
 
 };
 

@@ -53,35 +53,35 @@ template<class UserNodeLabel, class UserEdgeLabel>
 class CMU : public EditCosts<UserNodeLabel, UserEdgeLabel> {
 public:
 
-	virtual ~CMU();
+  virtual ~CMU();
 
-	/*!
-	 * @brief Constructor.
-	 * @param[in] node_ins_del_cost Cost for deleting or inserting nodes.
-	 * @param[in] alpha Importance of node edit operations vs. importance of edge edit operations.
-	 * @note Calling the constructor with the default arguments constructs the edit costs suggested in https://doi.org/10.1016/j.patrec.2017.10.007 and https://doi.org/10.1007/978-3-319-18224-7_14.
-	 */
-	CMU(double node_ins_del_cost = 100000, double alpha = 0.5);
+  /*!
+   * @brief Constructor.
+   * @param[in] node_ins_del_cost Cost for deleting or inserting nodes.
+   * @param[in] alpha Importance of node edit operations vs. importance of edge edit operations.
+   * @note Calling the constructor with the default arguments constructs the edit costs suggested in https://doi.org/10.1016/j.patrec.2017.10.007 and https://doi.org/10.1007/978-3-319-18224-7_14.
+   */
+  CMU(double node_ins_del_cost = 100000, double alpha = 0.5);
 
-	virtual double node_ins_cost_fun(const UserNodeLabel & node_label) const final;
+  virtual double node_ins_cost_fun(const UserNodeLabel & node_label) const final;
 
-	virtual double node_del_cost_fun(const UserNodeLabel & node_label) const final;
+  virtual double node_del_cost_fun(const UserNodeLabel & node_label) const final;
 
-	virtual double node_rel_cost_fun(const UserNodeLabel & node_label_1, const UserNodeLabel & node_label_2) const final;
+  virtual double node_rel_cost_fun(const UserNodeLabel & node_label_1, const UserNodeLabel & node_label_2) const final;
 
-	virtual void vectorize_node_label(const UserNodeLabel & node_label, std::vector<double> & vector_representation) const final;
+  virtual void vectorize_node_label(const UserNodeLabel & node_label, std::vector<double> & vector_representation) const final;
 
-	virtual double edge_ins_cost_fun(const UserEdgeLabel & edge_label) const final;
+  virtual double edge_ins_cost_fun(const UserEdgeLabel & edge_label) const final;
 
-	virtual double edge_del_cost_fun(const UserEdgeLabel & edge_label) const final;
+  virtual double edge_del_cost_fun(const UserEdgeLabel & edge_label) const final;
 
-	virtual double edge_rel_cost_fun(const UserEdgeLabel & edge_label_1, const UserEdgeLabel & edge_label_2) const final;
+  virtual double edge_rel_cost_fun(const UserEdgeLabel & edge_label_1, const UserEdgeLabel & edge_label_2) const final;
 
 private:
 
-	double node_ins_del_cost_;
+  double node_ins_del_cost_;
 
-	double alpha_;
+  double alpha_;
 };
 
 }

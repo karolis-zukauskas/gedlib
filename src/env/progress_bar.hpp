@@ -40,31 +40,31 @@ class ProgressBar {
 
 public:
 
-	friend std::ostream & operator<<(std::ostream &, const ProgressBar &);
+  friend std::ostream & operator<<(std::ostream &, const ProgressBar &);
 
-	/*!
-	 * @brief Constructs a progress bar for given number of tasks.
-	 * @param[in] num_tasks The number of tasks.
-	 */
-	ProgressBar(std::size_t num_tasks);
+  /*!
+   * @brief Constructs a progress bar for given number of tasks.
+   * @param[in] num_tasks The number of tasks.
+   */
+  ProgressBar(std::size_t num_tasks);
 
-	/*!
-	 * @brief Increments the number of solved tasks.
-	 */
-	void increment();
+  /*!
+   * @brief Increments the number of solved tasks.
+   */
+  void increment();
 
-	/*!
-	 * @brief Sets the number of solved tasks to 0.
-	 */
-	void reset();
+  /*!
+   * @brief Sets the number of solved tasks to 0.
+   */
+  void reset();
 
 private:
 
-	std::size_t num_solved_tasks_;
+  std::size_t num_solved_tasks_;
 
-	const std::size_t num_tasks_;
+  const std::size_t num_tasks_;
 
-	const std::chrono::high_resolution_clock::time_point start_time_;
+  const std::chrono::high_resolution_clock::time_point start_time_;
 };
 
 /*!

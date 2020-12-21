@@ -10,9 +10,9 @@
 
 for NL in 03 05 07 09
 do
-	srun --ntasks 1 --cpus-per-task 8 ../bin/train_walks S-acyclic_NL${NL}
-	srun --ntasks 1 --cpus-per-task 8 ../bin/train_subgraph S-acyclic_NL${NL}
-	srun --ntasks 1 --cpus-per-task 8 ../bin/train_ring S-acyclic_NL${NL}
-	srun --ntasks 1 --cpus-per-task 8 ../bin/train_ml --no-svm S-acyclic_NL${NL}
-	srun --ntasks 1 --cpus-per-task 8 ../bin/run_tests --quick S-acyclic_NL${NL}
+  srun --ntasks 1 --cpus-per-task 8 ../bin/train_walks S-acyclic_NL${NL}
+  srun --ntasks 1 --cpus-per-task 8 ../bin/train_subgraph S-acyclic_NL${NL}
+  srun --ntasks 1 --cpus-per-task 8 ../bin/train_ring S-acyclic_NL${NL}
+  srun --ntasks 1 --cpus-per-task 8 ../bin/train_ml --no-svm S-acyclic_NL${NL}
+  srun --ntasks 1 --cpus-per-task 8 ../bin/run_tests --quick S-acyclic_NL${NL}
 done
