@@ -53,7 +53,7 @@ else()
 endif()
 
 
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_MACOSX_RPATH ON)
 
