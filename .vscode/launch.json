@@ -8,10 +8,35 @@
       "name": "kazu",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/tests/kazu/bin/kazu_test",
+      "program": "${workspaceFolder}/tests/kazu/bin/kazu_test_d",
       "args": [],
       "stopAtEntry": true,
       "cwd": "${workspaceFolder}/tests/kazu/bin",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Enable break on all exceptions",
+          "text": "catch throw",
+          "ignoreFailures": true
+      }
+      ]
+    },
+    {
+      "name": "vldbj - lsape methods",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/tests/vldbj2020/bin/vldbj_test_lsape_based_methods_d",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}/tests/vldbj2020/bin",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
@@ -25,11 +50,11 @@
       ]
     },
     {
-      "name": "vldbj (lsape)",
+      "name": "vldbj - ls methods",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/tests/vldbj2020/bin/vldbj_test_lsape_based_methods",
-      "args": [],
+      "program": "${workspaceFolder}/tests/vldbj2020/bin/vldbj_test_ls_based_methods_d",
+      "args": ["--ipfp", "AIDS"],
       "stopAtEntry": true,
       "cwd": "${workspaceFolder}/tests/vldbj2020/bin",
       "environment": [],

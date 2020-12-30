@@ -95,7 +95,11 @@ solve(int num_solutions) {
 	clear_solution();
 
     if (not solve_optimally_) {
-        std::cout << "WARNING: greedy solvers not implemented yet. Using optimal solvers.";
+      row_to_col_assignments_.push_back(std::vector<std::size_t>(num_rows()));
+      col_to_row_assignments_.push_back(std::vector<std::size_t>(num_cols()));
+
+      minimal_cost_ = lsape::lsapeGreedy(cost_matrix_->data(), num_rows(), num_cols(), row_to_col_assignments_.at(0).data(), col_to_row_assignments_.at(0).data(), lsape::REFINED);
+      return;
     }
     DMatrix copied_costs(*cost_matrix_);
     liblsap::LSAPE<double, int> lsape(static_cast<int>(num_rows()), static_cast<int>(num_cols()), copied_costs.data());

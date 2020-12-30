@@ -142,6 +142,12 @@ namespace lsape {
   template <class DT, typename IT>
     DT greedyRefinedLSAPE(const DT *C, const IT &n, const IT &m, IT *rho, IT *varrho = NULL)
   {
+    if (m > n) {
+      std::cout << "\nn = " << n << ", m = " << m << std::endl;
+      throw std::runtime_error("Greedy REFINED LSAPE violated n >= m constraint");
+    }
+
+
     IT nass = 0, i = -1, j = -1, imin, jmin;
     DT cmin, ckmin, mxdt = std::numeric_limits<DT>::max(), approx = 0;
     bool deletevarrho = false;

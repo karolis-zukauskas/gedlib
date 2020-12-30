@@ -28,4 +28,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/tests/kazu/bin)
 add_custom_target(kazu DEPENDS  kazu_test)
 
 add_executable(kazu_test src/main.cpp)
+set_target_properties(kazu_test PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+
 target_link_libraries(kazu_test gxlgedlib)

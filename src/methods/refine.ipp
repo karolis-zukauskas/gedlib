@@ -52,6 +52,9 @@ ls_run_from_initial_solution_(const GEDGraph & g, const GEDGraph & h, double low
 	Swap_ best_swap;
 	std::size_t swap_size{2};
 	while ((output_node_map.induced_cost() > lower_bound) and ((best_swap_cost < 0) or (swap_size <= max_swap_size_))) {
+    // Should probably do atomic increment .. (tho this will work for non parallelized tests)
+    this->num_ls_iterations++;
+
 		std::vector<NodeMap::Assignment> assignments;
 		output_node_map.as_relation(assignments);
 		if (add_dummy_assignment_) {

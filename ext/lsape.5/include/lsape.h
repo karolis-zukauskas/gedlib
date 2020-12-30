@@ -784,8 +784,8 @@ namespace lsape {
   {
     switch(greedy_method)
     {
-      case BASIC: return greedyBasicLSAPE<DT>(C,nrows,ncols,rho,varrho);
-	//case 1: return greedyRefinedLSAPE<DT>(C,nrows,ncols,rho,varrho);
+      case BASIC: return greedyBasicLSAPE<DT>(C,nrows,ncols,rho,varrho); 
+      case REFINED: return greedyRefinedLSAPE<DT>(C,nrows,ncols,rho,varrho);
 	//case 3: return greedyBasicSortLSAPE<DT>(C,nrows,ncols,rho,varrho);
       case INT_BASIC_SORT: return greedyBasicCountingSortLSAPE<DT>(C,nrows,ncols,rho,varrho);
       default: throw std::runtime_error("GREEDY_METHOD unknown in lsapeGreedy(...)");

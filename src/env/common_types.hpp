@@ -71,6 +71,10 @@
 #endif
 #include <lsap.hh>
 #include <lsape.hh>
+
+// For greedy methods:
+#include <lsape.h>
+
 #include <svm.h>
 #include <doublefann.h>
 #include <fann_cpp.h>

@@ -41,6 +41,9 @@ template<class UserNodeLabel, class UserEdgeLabel>
 LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
 LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
 GEDMethod<UserNodeLabel, UserEdgeLabel>(ged_data),
+num_ls_iterations{0},
+initial_sulutions_time{0},
+ls_iterations_time{0},
 num_threads_{1},
 initialization_method_{nullptr},
 initialization_options_(""),
@@ -77,6 +80,8 @@ ged_run_(const GEDGraph & g, const GEDGraph & h, Result & result) {
 
 	// Initialize the method for the run between g and h.
 	ls_runtime_init_(g, h);
+  this->num_ls_iterations = 0;
+
 	// Generate the initial node maps and allocate output node maps.
 	std::vector<NodeMap> initial_node_maps;
 	std::vector<NodeMap> result_node_maps;
@@ -85,7 +90,12 @@ ged_run_(const GEDGraph & g, const GEDGraph & h, Result & result) {
 	double lower_bound{0.0};
 	std::vector<std::vector<double>> counts_matrix(g.num_nodes(), std::vector<double>(h.num_nodes() + 1, 0.0));
 	double skewdness_counts_matrix{1.0};
-	generate_initial_node_maps_(g, h, initial_node_maps, result);
+
+  auto generate_start = std::chrono::high_resolution_clock::now();
+  generate_initial_node_maps_(g, h, initial_node_maps, result);
+  auto generate_end = std::chrono::high_resolution_clock::now();
+  this->initial_sulutions_time = generate_end - generate_start;
+
 	for (std::size_t node_map_id = 0; node_map_id < initial_node_maps.size(); node_map_id++) {
 		result_node_maps.emplace_back(g.num_nodes(), h.num_nodes());
 		visited_node_maps.emplace_back(initial_node_maps.at(node_map_id));
@@ -103,6 +113,9 @@ ged_run_(const GEDGraph & g, const GEDGraph & h, Result & result) {
 	// Parallelly run local searches starting at the initial node maps. Stop if the optimal solution has been found or if the desired number of terminated runs has been reached.
 	bool found_optimum{false};
 	std::size_t num_runs_from_initial_solutions{num_runs_from_initial_solutions_()};
+
+  auto ls_iterations_start = std::chrono::high_resolution_clock::now();
+
 	for (std::size_t loop{0}; loop <= num_randpost_loops_; loop++) {
 		if (found_optimum) {
 			break;
@@ -146,6 +159,9 @@ ged_run_(const GEDGraph & g, const GEDGraph & h, Result & result) {
 		}
 	}
 
+  auto ls_iterations_end = std::chrono::high_resolution_clock::now();
+  this->ls_iterations_time = ls_iterations_end - ls_iterations_start;
+
 	// Determine the best node map.
 	result.sort_node_maps_and_set_upper_bound(num_runs_from_initial_solutions_());
 
@@ -187,6 +203,9 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
 		else if (arg == "WALKS") {
 			initialization_method_ = new Walks<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
 		}
+    else if (arg == "STAR") {
+      initialization_method_ = new Star<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");
 		}
@@ -356,8 +375,14 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
 		}
 		is_valid_option = true;
 	}
+  else if (option == "optimal_initialization") {
+    std::string additionalOptions(" --optimal " + arg);
+
+    initialization_method_->set_options(initialization_options_ + additionalOptions);
+  }
+
 	if (initialization_method_) {
-		initialization_method_->set_options(initialization_options_);
+    initialization_method_->set_options(initialization_options_);
 	}
 	if (lower_bound_method_) {
 		lower_bound_method_->set_options(lower_bound_method_options_);
@@ -416,7 +441,8 @@ generate_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<
 	if (initialization_method_) {
 		generate_lsape_based_initial_node_maps_(g, h, initial_node_maps, result);
 	}
-	generate_random_initial_node_maps_(g, h, initial_node_maps);
+  if (num_initial_solutions_ > initial_node_maps.size())
+    generate_random_initial_node_maps_(g, h, initial_node_maps);
 }
 
 template<class UserNodeLabel, class UserEdgeLabel>

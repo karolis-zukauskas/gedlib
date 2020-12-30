@@ -67,8 +67,8 @@
 */
 // =========================================================================
 
-#ifndef _HUNGARIAN_LSAP_H_
-#define _HUNGARIAN_LSAP_H_
+#ifndef _HUNGARIAN_LSAP_DEV_H_
+#define _HUNGARIAN_LSAP_DEV_H_
 
 #include <limits>
 

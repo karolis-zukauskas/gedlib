@@ -65,6 +65,10 @@ public:
 	 */
 	LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
 
+  std::size_t num_ls_iterations;
+  Seconds initial_sulutions_time;
+  Seconds ls_iterations_time;
+
 protected:
 
 	/*!

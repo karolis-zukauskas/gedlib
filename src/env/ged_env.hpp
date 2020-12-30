@@ -196,6 +196,8 @@ public:
 	 */
 	void set_method(Options::GEDMethod method, const std::string & options = std::string(""));
 
+  GEDMethod<UserNodeLabel, UserEdgeLabel>* get_method() const {  return ged_method_; }
+
 	/*!
 	 * @brief Runs the GED method specified by call to set_method() between the graphs with IDs @p g_id and @p h_id.
 	 * @param[in] g_id ID of an input graph that has been added to the environment.
