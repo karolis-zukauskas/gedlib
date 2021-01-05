@@ -34,6 +34,8 @@
 #define GXL_GEDLIB_SHARED
 #include "../../../src/env/ged_env.hpp"
 
+using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
+
 namespace util {
 
 bool is_chemical_dataset(const std::string & dataset) {
@@ -218,6 +220,14 @@ std::vector<ged::GEDGraph::GraphID> setup_environment(const std::string & datase
   env.set_edit_costs(edit_costs(dataset));
   env.init(init_type(dataset));
   return graph_ids;
+}
+
+void setup_rand_environment(ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel> & env) {
+  // Costs: [node_ins_cost, node_del_cost, node_rel_cost, edge_ins_cost, edge_del_cost, edge_rel_cost]
+  std::vector<double> edit_costs { 2.5, 2.5, 5, 1.0, 1.0, 1.0 };
+
+  env.set_edit_costs(ged::Options::EditCosts::CONSTANT, edit_costs);
+  env.init(ged::Options::InitType::EAGER_WITHOUT_SHUFFLED_COPIES);
 }
 
 void setup_datasets(std::vector<std::string> & datasets) {

@@ -1,14 +1,103 @@
 <?xml version="1.0"?>
-<!DOCTYPE GraphCollection SYSTEM "http://www.inf.unibz.it/~blumenthal/dtd/GraphCollection.dtd">
 <GraphCollection>
-  <graph file="enzyme_416.gxl" class="5"/>
-  <graph file="enzyme_358.gxl" class="4"/>
-  <graph file="enzyme_446.gxl" class="5"/>
-  <graph file="enzyme_193.gxl" class="2"/>
-  <graph file="enzyme_586.gxl" class="6"/>
-  <graph file="enzyme_451.gxl" class="5"/>
-  <graph file="enzyme_248.gxl" class="3"/>
-  <graph file="enzyme_202.gxl" class="3"/>
-  <graph file="enzyme_375.gxl" class="4"/>
-  <graph file="enzyme_51.gxl" class="1"/>
+  <graph file="enzyme_405.gxl" class="any" />
+  <graph file="enzyme_188.gxl" class="any" />
+  <graph file="enzyme_39.gxl" class="any" />
+  <graph file="enzyme_454.gxl" class="any" />
+  <graph file="enzyme_416.gxl" class="any" />
+  <graph file="enzyme_561.gxl" class="any" />
+  <graph file="enzyme_75.gxl" class="any" />
+  <graph file="enzyme_417.gxl" class="any" />
+  <graph file="enzyme_361.gxl" class="any" />
+  <graph file="enzyme_447.gxl" class="any" />
+  <graph file="enzyme_28.gxl" class="any" />
+  <graph file="enzyme_402.gxl" class="any" />
+  <graph file="enzyme_508.gxl" class="any" />
+  <graph file="enzyme_468.gxl" class="any" />
+  <graph file="enzyme_232.gxl" class="any" />
+  <graph file="enzyme_151.gxl" class="any" />
+  <graph file="enzyme_29.gxl" class="any" />
+  <graph file="enzyme_353.gxl" class="any" />
+  <graph file="enzyme_82.gxl" class="any" />
+  <graph file="enzyme_356.gxl" class="any" />
+  <graph file="enzyme_479.gxl" class="any" />
+  <graph file="enzyme_506.gxl" class="any" />
+  <graph file="enzyme_202.gxl" class="any" />
+  <graph file="enzyme_280.gxl" class="any" />
+  <graph file="enzyme_70.gxl" class="any" />
+  <graph file="enzyme_190.gxl" class="any" />
+  <graph file="enzyme_120.gxl" class="any" />
+  <graph file="enzyme_6.gxl" class="any" />
+  <graph file="enzyme_403.gxl" class="any" />
+  <graph file="enzyme_213.gxl" class="any" />
+  <graph file="enzyme_562.gxl" class="any" />
+  <graph file="enzyme_391.gxl" class="any" />
+  <graph file="enzyme_150.gxl" class="any" />
+  <graph file="enzyme_555.gxl" class="any" />
+  <graph file="enzyme_208.gxl" class="any" />
+  <graph file="enzyme_429.gxl" class="any" />
+  <graph file="enzyme_450.gxl" class="any" />
+  <graph file="enzyme_79.gxl" class="any" />
+  <graph file="enzyme_58.gxl" class="any" />
+  <graph file="enzyme_261.gxl" class="any" />
+  <graph file="enzyme_483.gxl" class="any" />
+  <graph file="enzyme_433.gxl" class="any" />
+  <graph file="enzyme_576.gxl" class="any" />
+  <graph file="enzyme_186.gxl" class="any" />
+  <graph file="enzyme_421.gxl" class="any" />
+  <graph file="enzyme_467.gxl" class="any" />
+  <graph file="enzyme_263.gxl" class="any" />
+  <graph file="enzyme_2.gxl" class="any" />
+  <graph file="enzyme_358.gxl" class="any" />
+  <graph file="enzyme_264.gxl" class="any" />
+  <graph file="enzyme_111.gxl" class="any" />
+  <graph file="enzyme_335.gxl" class="any" />
+  <graph file="enzyme_298.gxl" class="any" />
+  <graph file="enzyme_474.gxl" class="any" />
+  <graph file="enzyme_383.gxl" class="any" />
+  <graph file="enzyme_518.gxl" class="any" />
+  <graph file="enzyme_319.gxl" class="any" />
+  <graph file="enzyme_419.gxl" class="any" />
+  <graph file="enzyme_510.gxl" class="any" />
+  <graph file="enzyme_425.gxl" class="any" />
+  <graph file="enzyme_229.gxl" class="any" />
+  <graph file="enzyme_83.gxl" class="any" />
+  <graph file="enzyme_249.gxl" class="any" />
+  <graph file="enzyme_328.gxl" class="any" />
+  <graph file="enzyme_262.gxl" class="any" />
+  <graph file="enzyme_453.gxl" class="any" />
+  <graph file="enzyme_321.gxl" class="any" />
+  <graph file="enzyme_422.gxl" class="any" />
+  <graph file="enzyme_528.gxl" class="any" />
+  <graph file="enzyme_384.gxl" class="any" />
+  <graph file="enzyme_248.gxl" class="any" />
+  <graph file="enzyme_35.gxl" class="any" />
+  <graph file="enzyme_482.gxl" class="any" />
+  <graph file="enzyme_170.gxl" class="any" />
+  <graph file="enzyme_339.gxl" class="any" />
+  <graph file="enzyme_488.gxl" class="any" />
+  <graph file="enzyme_145.gxl" class="any" />
+  <graph file="enzyme_342.gxl" class="any" />
+  <graph file="enzyme_471.gxl" class="any" />
+  <graph file="enzyme_586.gxl" class="any" />
+  <graph file="enzyme_451.gxl" class="any" />
+  <graph file="enzyme_581.gxl" class="any" />
+  <graph file="enzyme_466.gxl" class="any" />
+  <graph file="enzyme_137.gxl" class="any" />
+  <graph file="enzyme_220.gxl" class="any" />
+  <graph file="enzyme_238.gxl" class="any" />
+  <graph file="enzyme_588.gxl" class="any" />
+  <graph file="enzyme_480.gxl" class="any" />
+  <graph file="enzyme_201.gxl" class="any" />
+  <graph file="enzyme_441.gxl" class="any" />
+  <graph file="enzyme_318.gxl" class="any" />
+  <graph file="enzyme_507.gxl" class="any" />
+  <graph file="enzyme_211.gxl" class="any" />
+  <graph file="enzyme_322.gxl" class="any" />
+  <graph file="enzyme_65.gxl" class="any" />
+  <graph file="enzyme_161.gxl" class="any" />
+  <graph file="enzyme_478.gxl" class="any" />
+  <graph file="enzyme_375.gxl" class="any" />
+  <graph file="enzyme_254.gxl" class="any" />
+  <graph file="enzyme_66.gxl" class="any" />
 </GraphCollection>

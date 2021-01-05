@@ -50,8 +50,6 @@ public:
 
 	BranchUniform(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
 
-private:
-
 	enum SortMethod_ {STD, COUNTING};
 
 	class SortedEdgeLabels_ {
@@ -64,7 +62,7 @@ private:
 
 		const std::vector<LabelID> & get_incident_labels(GEDGraph::NodeID) const;
 
-	private:
+	public:
 		std::map<GEDGraph::NodeID, std::vector<LabelID>> sorted_edge_labels_;
 	};
 
@@ -82,7 +80,7 @@ private:
 
 	virtual void lsape_set_default_options_() final;
 
-	virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) final;
+	virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem);
 
 	virtual void lsape_init_graph_(const GEDGraph & graph) final;
 
@@ -96,6 +94,20 @@ private:
 
 	double compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k, double min_edge_edit_cost) const;
 
+};
+
+
+/**
+ * Modifications:
+ * mean cost of edge edit operations are used instead of minimums.
+ */
+template<class UserNodeLabel, class UserEdgeLabel>
+class BranchUniform2 : public BranchUniform<UserNodeLabel, UserEdgeLabel> {
+public:
+  BranchUniform2(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+
+private:
+  virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem);
 };
 
 }

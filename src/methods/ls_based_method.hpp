@@ -80,6 +80,8 @@ private:
 
 	LSAPEBasedMethod<UserNodeLabel, UserEdgeLabel> * initialization_method_;
 
+  LSBasedMethod<UserNodeLabel, UserEdgeLabel>* ls_initialization_method_;
+
 	std::string initialization_options_;
 
 	GEDMethod<UserNodeLabel, UserEdgeLabel> * lower_bound_method_;
@@ -125,6 +127,8 @@ private:
 	void generate_random_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<NodeMap> & initial_node_maps);
 
 	void generate_lsape_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<NodeMap> & initial_node_maps, Result & result);
+
+  void generate_ls_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<NodeMap> & initial_node_maps, Result & result);
 
 	double update_counts_matrix_and_visited_node_maps_(const std::vector<NodeMap> & result_node_maps, const std::vector<bool> & is_converged_node_map, const double & upper_bound,
 			const double & lower_bound, std::vector<NodeMap> & visited_node_maps, std::size_t loop, std::vector<std::vector<double>> & counts_matrix) const;

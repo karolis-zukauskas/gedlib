@@ -289,6 +289,46 @@ compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k, double min_edge_
 	return cost;
 }
 
+
+// ============================
+// BRANCH_UNIFORM 2
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+BranchUniform2<UserNodeLabel, UserEdgeLabel>::
+BranchUniform2(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+BranchUniform<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+BranchUniform2<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+
+	const typename BranchUniform<UserNodeLabel, UserEdgeLabel>::SortedEdgeLabels_ & sorted_edge_labels_g = this->sorted_edge_labels_.at(g.id());
+	const typename BranchUniform<UserNodeLabel, UserEdgeLabel>::SortedEdgeLabels_ & sorted_edge_labels_h = this->sorted_edge_labels_.at(h.id());
+	double mean_edge_subs_cost{this->ged_data_.mean_edge_subs_cost(g, h)};
+	double mean_edge_del_cost{this->ged_data_.mean_edge_del_cost(g)};
+	double mean_edge_ins_cost{this->ged_data_.mean_edge_ins_cost(h)};
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_edge_labels_g, sorted_edge_labels_h, mean_edge_subs_cost, mean_edge_del_cost, mean_edge_ins_cost);
+			}
+			else if (row_in_master < g.num_nodes()) {
+				master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master, mean_edge_del_cost);
+			}
+			else if (col_in_master < h.num_nodes()) {
+				master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master, mean_edge_ins_cost);
+			}
+		}
+	}
+}
+
 }
 
 #endif /* SRC_METHODS_BRANCH_UNIFORM_IPP_ */

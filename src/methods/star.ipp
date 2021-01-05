@@ -216,8 +216,266 @@ compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k) const {
 	return static_cast<double>(1 + 2 * h.degree(k));
 }
 
+// ============================
+// STAR 2
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star2<UserNodeLabel, UserEdgeLabel>::
+Star2(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+double
+Star2<UserNodeLabel, UserEdgeLabel>::
+compute_deletion_cost_(const GEDGraph & g, GEDGraph::NodeID i) const {
+	// Collect node deletion cost.
+	double cost{this->ged_data_.node_cost(g.get_node_label(i), ged::dummy_label())};
+
+	// Collect edge deletion costs.
+	auto incident_edges_i = g.incident_edges(i);
+	for (auto ij = incident_edges_i.first; ij != incident_edges_i.second; ij++) {
+		cost += this->ged_data_.edge_cost(g.get_edge_label(*ij), ged::dummy_label()) * 0.5;
+	}
+
+	// Return overall deletion cost.
+	return cost;
+}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+double
+Star2<UserNodeLabel, UserEdgeLabel>::
+compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k) const {
+	// Collect node insertion cost.
+	double cost{this->ged_data_.node_cost(ged::dummy_label(), h.get_node_label(k))};
+
+	// Collect edge insertion costs.
+	auto incident_edges_k = h.incident_edges(k);
+	for (auto kl = incident_edges_k.first; kl != incident_edges_k.second; kl++) {
+		cost += this->ged_data_.edge_cost(ged::dummy_label(), h.get_edge_label(*kl)) * 0.5;
+	}
+
+	// Return overall insertion cost.
+	return cost;
+}
+
+// ============================
+// STAR 3
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star3<UserNodeLabel, UserEdgeLabel>::
+Star3(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+double
+Star3<UserNodeLabel, UserEdgeLabel>::
+compute_deletion_cost_(const GEDGraph & g, GEDGraph::NodeID i) const {
+	// Collect node deletion cost.
+	double cost{this->ged_data_.node_cost(g.get_node_label(i), ged::dummy_label())};
+
+	// Collect edge deletion costs.
+	auto incident_edges_i = g.incident_edges(i);
+	for (auto ij = incident_edges_i.first; ij != incident_edges_i.second; ij++) {
+		cost += this->ged_data_.edge_cost(g.get_edge_label(*ij), ged::dummy_label()) * 0.5;
+	}
+
+	// Return overall deletion cost.
+	return cost;
+}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+double
+Star3<UserNodeLabel, UserEdgeLabel>::
+compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k) const {
+	// Collect node insertion cost.
+	double cost{this->ged_data_.node_cost(ged::dummy_label(), h.get_node_label(k))};
+
+	// Collect edge insertion costs.
+	auto incident_edges_k = h.incident_edges(k);
+	for (auto kl = incident_edges_k.first; kl != incident_edges_k.second; kl++) {
+		cost += this->ged_data_.edge_cost(ged::dummy_label(), h.get_edge_label(*kl)) * 0.5;
+	}
+
+	// Return overall insertion cost.
+	return cost;
+}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star3<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_g = this->sorted_node_labels_.at(g.id());
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_h = this->sorted_node_labels_.at(h.id());
+
+	double min_edit_cost{this->ged_data_.min_edit_cost(g, h)};
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_node_labels_g, sorted_node_labels_h) * min_edit_cost;
+			}
+			else if (row_in_master < g.num_nodes()) {
+				master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master);
+			}
+			else if (col_in_master < h.num_nodes()) {
+				master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master);
+			}
+		}
+	}
 }
 
 
+// ============================
+// STAR 4
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star4<UserNodeLabel, UserEdgeLabel>::
+Star4(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star4<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_g = this->sorted_node_labels_.at(g.id());
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_h = this->sorted_node_labels_.at(h.id());
+
+  double mean_sub_cost = std::min(this->ged_data_.mean_node_subs_cost(g, h), this->ged_data_.mean_edge_subs_cost(g, h));
+  double mean_del_cost = std::min(this->ged_data_.mean_node_del_cost(g), this->ged_data_.mean_edge_del_cost(g));
+  double mean_ins_cost = std::min(this->ged_data_.mean_node_ins_cost(h), this->ged_data_.mean_edge_ins_cost(h));
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_node_labels_g, sorted_node_labels_h) * mean_sub_cost;
+			}
+			else if (row_in_master < g.num_nodes()) {
+				master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master) * mean_del_cost;
+			}
+			else if (col_in_master < h.num_nodes()) {
+				master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master) * mean_ins_cost;
+			}
+		}
+	}
+}
+
+
+// ============================
+// STAR 5
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star5<UserNodeLabel, UserEdgeLabel>::
+Star5(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star5<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_g = this->sorted_node_labels_.at(g.id());
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_h = this->sorted_node_labels_.at(h.id());
+
+  double const mean_sub_cost = std::min(this->ged_data_.mean_node_subs_cost(g, h), this->ged_data_.mean_edge_subs_cost(g, h));
+  double const mean_del_cost = std::min(this->ged_data_.mean_node_del_cost(g), this->ged_data_.mean_edge_del_cost(g));
+  double const mean_ins_cost = std::min(this->ged_data_.mean_node_ins_cost(h), this->ged_data_.mean_edge_ins_cost(h));
+
+  bool const is_square_matrix = master_problem.num_rows() == master_problem.num_cols();
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_node_labels_g, sorted_node_labels_h) * mean_sub_cost;
+			}
+			else if (row_in_master < g.num_nodes()) {
+        if (is_square_matrix)
+          master_problem(row_in_master, h.num_nodes()) = std::numeric_limits<double>::infinity();
+        else
+          master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master) * mean_del_cost;
+			}
+			else if (col_in_master < h.num_nodes()) {
+        if (is_square_matrix)
+          master_problem(g.num_nodes(), col_in_master) = std::numeric_limits<double>::infinity();
+        else
+          master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master) * mean_ins_cost;
+			}
+		}
+	}
+}
+
+
+// ============================
+// STAR 6
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star6<UserNodeLabel, UserEdgeLabel>::
+Star6(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star6<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_g = this->sorted_node_labels_.at(g.id());
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_h = this->sorted_node_labels_.at(h.id());
+
+  double const mean_sub_cost = std::min(this->ged_data_.mean_node_subs_cost(g, h), this->ged_data_.mean_edge_subs_cost(g, h));
+  double const mean_del_cost = std::min(this->ged_data_.mean_node_del_cost(g), this->ged_data_.mean_edge_del_cost(g));
+  double const mean_ins_cost = std::min(this->ged_data_.mean_node_ins_cost(h), this->ged_data_.mean_edge_ins_cost(h));
+
+  auto const num_g_nodes = g.num_nodes();
+  auto const num_h_nodes = h.num_nodes();
+  size_t const min_node_count = std::min(num_g_nodes, num_h_nodes);
+  int const threshold = static_cast<int>(std::round(static_cast<double>(min_node_count) / 10.0));
+
+  bool const is_almost_square_matrix = std::abs(static_cast<long>(master_problem.num_rows()) - static_cast<long>(master_problem.num_cols())) <= threshold;
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_node_labels_g, sorted_node_labels_h) * mean_sub_cost;
+			}
+			else if (row_in_master < g.num_nodes()) {
+        if (is_almost_square_matrix && num_g_nodes < num_h_nodes)
+          master_problem(row_in_master, h.num_nodes()) = 10000.0; // std::numeric_limits<double>::infinity();
+        else
+          master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master) * mean_del_cost;
+			}
+			else if (col_in_master < h.num_nodes()) {
+        if (is_almost_square_matrix && num_g_nodes > num_h_nodes)
+          master_problem(g.num_nodes(), col_in_master) = 10000.0; // std::numeric_limits<double>::infinity();
+        else
+          master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master) * mean_ins_cost;
+			}
+		}
+	}
+}
+
+
+}
 
 #endif /* SRC_METHODS_STAR_IPP_ */

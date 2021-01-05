@@ -1,14 +1,74 @@
 <?xml version="1.0"?>
-<!DOCTYPE GraphCollection SYSTEM "http://www.inf.unibz.it/~blumenthal/dtd/GraphCollection.dtd">
 <GraphCollection>
-  <graph file="27783.gxl" class="a"/>
-  <graph file="37270.gxl" class="a"/>
-  <graph file="28302.gxl" class="a"/>
-  <graph file="28795.gxl" class="a"/>
-  <graph file="27416.gxl" class="a"/>
-  <graph file="27414.gxl" class="a"/>
-  <graph file="27934.gxl" class="a"/>
-  <graph file="27304.gxl" class="a"/>
-  <graph file="28863.gxl" class="a"/>
-  <graph file="27782.gxl" class="a"/>
+  <graph file="42358.gxl" class="any" />
+  <graph file="25868.gxl" class="any" />
+  <graph file="27985.gxl" class="any" />
+  <graph file="28863.gxl" class="any" />
+  <graph file="42414.gxl" class="any" />
+  <graph file="27984.gxl" class="any" />
+  <graph file="27415.gxl" class="any" />
+  <graph file="2227.gxl" class="any" />
+  <graph file="28300.gxl" class="any" />
+  <graph file="27932.gxl" class="any" />
+  <graph file="41113.gxl" class="any" />
+  <graph file="27305.gxl" class="any" />
+  <graph file="41541.gxl" class="any" />
+  <graph file="27304.gxl" class="any" />
+  <graph file="27891.gxl" class="any" />
+  <graph file="36035.gxl" class="any" />
+  <graph file="7993.gxl" class="any" />
+  <graph file="28795.gxl" class="any" />
+  <graph file="27416.gxl" class="any" />
+  <graph file="28867.gxl" class="any" />
+  <graph file="31510.gxl" class="any" />
+  <graph file="2105.gxl" class="any" />
+  <graph file="23754.gxl" class="any" />
+  <graph file="27934.gxl" class="any" />
+  <graph file="2697.gxl" class="any" />
+  <graph file="15478.gxl" class="any" />
+  <graph file="19274.gxl" class="any" />
+  <graph file="28301.gxl" class="any" />
+  <graph file="39873.gxl" class="any" />
+  <graph file="27931.gxl" class="any" />
+  <graph file="27782.gxl" class="any" />
+  <graph file="40595.gxl" class="any" />
+  <graph file="37266.gxl" class="any" />
+  <graph file="28794.gxl" class="any" />
+  <graph file="42357.gxl" class="any" />
+  <graph file="11108.gxl" class="any" />
+  <graph file="27115.gxl" class="any" />
+  <graph file="31511.gxl" class="any" />
+  <graph file="40117.gxl" class="any" />
+  <graph file="27116.gxl" class="any" />
+  <graph file="27889.gxl" class="any" />
+  <graph file="36027.gxl" class="any" />
+  <graph file="33010.gxl" class="any" />
+  <graph file="35135.gxl" class="any" />
+  <graph file="27783.gxl" class="any" />
+  <graph file="24818.gxl" class="any" />
+  <graph file="2553.gxl" class="any" />
+  <graph file="40677.gxl" class="any" />
+  <graph file="27890.gxl" class="any" />
+  <graph file="27983.gxl" class="any" />
+  <graph file="25869.gxl" class="any" />
+  <graph file="42356.gxl" class="any" />
+  <graph file="21377.gxl" class="any" />
+  <graph file="41813.gxl" class="any" />
+  <graph file="36848.gxl" class="any" />
+  <graph file="2554.gxl" class="any" />
+  <graph file="37270.gxl" class="any" />
+  <graph file="29128.gxl" class="any" />
+  <graph file="435.gxl" class="any" />
+  <graph file="28793.gxl" class="any" />
+  <graph file="25558.gxl" class="any" />
+  <graph file="27306.gxl" class="any" />
+  <graph file="19165.gxl" class="any" />
+  <graph file="28302.gxl" class="any" />
+  <graph file="27117.gxl" class="any" />
+  <graph file="29129.gxl" class="any" />
+  <graph file="40261.gxl" class="any" />
+  <graph file="36034.gxl" class="any" />
+  <graph file="27414.gxl" class="any" />
+  <graph file="37271.gxl" class="any" />
+  <graph file="30415.gxl" class="any" />
 </GraphCollection>

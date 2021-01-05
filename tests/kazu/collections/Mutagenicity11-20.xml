@@ -1,14 +1,103 @@
 <?xml version="1.0"?>
-<!DOCTYPE GraphCollection SYSTEM "http://www.inf.unibz.it/~blumenthal/dtd/GraphCollection.dtd">
 <GraphCollection>
-  <graph file="molecule_1611.gxl" class="nonmutagen"/>
-  <graph file="molecule_2167.gxl" class="nonmutagen"/>
-  <graph file="molecule_123.gxl" class="nonmutagen"/>
-  <graph file="molecule_715.gxl" class="nonmutagen"/>
-  <graph file="molecule_929.gxl" class="mutagen"/>
-  <graph file="molecule_2735.gxl" class="nonmutagen"/>
-  <graph file="molecule_456.gxl" class="nonmutagen"/>
-  <graph file="molecule_4130.gxl" class="nonmutagen"/>
-  <graph file="molecule_1895.gxl" class="mutagen"/>
-  <graph file="molecule_943.gxl" class="nonmutagen"/>
+  <graph file="molecule_1397.gxl" class="any" />
+  <graph file="molecule_2400.gxl" class="any" />
+  <graph file="molecule_598.gxl" class="any" />
+  <graph file="molecule_2070.gxl" class="any" />
+  <graph file="molecule_1055.gxl" class="any" />
+  <graph file="molecule_3362.gxl" class="any" />
+  <graph file="molecule_3682.gxl" class="any" />
+  <graph file="molecule_1937.gxl" class="any" />
+  <graph file="molecule_490.gxl" class="any" />
+  <graph file="molecule_1222.gxl" class="any" />
+  <graph file="molecule_1102.gxl" class="any" />
+  <graph file="molecule_1156.gxl" class="any" />
+  <graph file="molecule_3268.gxl" class="any" />
+  <graph file="molecule_1071.gxl" class="any" />
+  <graph file="molecule_2570.gxl" class="any" />
+  <graph file="molecule_1262.gxl" class="any" />
+  <graph file="molecule_1740.gxl" class="any" />
+  <graph file="molecule_3524.gxl" class="any" />
+  <graph file="molecule_3505.gxl" class="any" />
+  <graph file="molecule_2261.gxl" class="any" />
+  <graph file="molecule_2880.gxl" class="any" />
+  <graph file="molecule_1147.gxl" class="any" />
+  <graph file="molecule_4153.gxl" class="any" />
+  <graph file="molecule_3219.gxl" class="any" />
+  <graph file="molecule_3693.gxl" class="any" />
+  <graph file="molecule_1170.gxl" class="any" />
+  <graph file="molecule_2086.gxl" class="any" />
+  <graph file="molecule_987.gxl" class="any" />
+  <graph file="molecule_3434.gxl" class="any" />
+  <graph file="molecule_4169.gxl" class="any" />
+  <graph file="molecule_1464.gxl" class="any" />
+  <graph file="molecule_1184.gxl" class="any" />
+  <graph file="molecule_2674.gxl" class="any" />
+  <graph file="molecule_1681.gxl" class="any" />
+  <graph file="molecule_1737.gxl" class="any" />
+  <graph file="molecule_3771.gxl" class="any" />
+  <graph file="molecule_2061.gxl" class="any" />
+  <graph file="molecule_1916.gxl" class="any" />
+  <graph file="molecule_2940.gxl" class="any" />
+  <graph file="molecule_1001.gxl" class="any" />
+  <graph file="molecule_3345.gxl" class="any" />
+  <graph file="molecule_3087.gxl" class="any" />
+  <graph file="molecule_3340.gxl" class="any" />
+  <graph file="molecule_3602.gxl" class="any" />
+  <graph file="molecule_1369.gxl" class="any" />
+  <graph file="molecule_3269.gxl" class="any" />
+  <graph file="molecule_2835.gxl" class="any" />
+  <graph file="molecule_479.gxl" class="any" />
+  <graph file="molecule_2115.gxl" class="any" />
+  <graph file="molecule_2382.gxl" class="any" />
+  <graph file="molecule_4081.gxl" class="any" />
+  <graph file="molecule_484.gxl" class="any" />
+  <graph file="molecule_1980.gxl" class="any" />
+  <graph file="molecule_2803.gxl" class="any" />
+  <graph file="molecule_3873.gxl" class="any" />
+  <graph file="molecule_2607.gxl" class="any" />
+  <graph file="molecule_1237.gxl" class="any" />
+  <graph file="molecule_3946.gxl" class="any" />
+  <graph file="molecule_556.gxl" class="any" />
+  <graph file="molecule_3441.gxl" class="any" />
+  <graph file="molecule_3756.gxl" class="any" />
+  <graph file="molecule_89.gxl" class="any" />
+  <graph file="molecule_822.gxl" class="any" />
+  <graph file="molecule_2200.gxl" class="any" />
+  <graph file="molecule_3949.gxl" class="any" />
+  <graph file="molecule_3553.gxl" class="any" />
+  <graph file="molecule_2757.gxl" class="any" />
+  <graph file="molecule_1414.gxl" class="any" />
+  <graph file="molecule_559.gxl" class="any" />
+  <graph file="molecule_1921.gxl" class="any" />
+  <graph file="molecule_883.gxl" class="any" />
+  <graph file="molecule_730.gxl" class="any" />
+  <graph file="molecule_2.gxl" class="any" />
+  <graph file="molecule_3517.gxl" class="any" />
+  <graph file="molecule_943.gxl" class="any" />
+  <graph file="molecule_3986.gxl" class="any" />
+  <graph file="molecule_4130.gxl" class="any" />
+  <graph file="molecule_3395.gxl" class="any" />
+  <graph file="molecule_4163.gxl" class="any" />
+  <graph file="molecule_4031.gxl" class="any" />
+  <graph file="molecule_1294.gxl" class="any" />
+  <graph file="molecule_246.gxl" class="any" />
+  <graph file="molecule_3339.gxl" class="any" />
+  <graph file="molecule_1572.gxl" class="any" />
+  <graph file="molecule_407.gxl" class="any" />
+  <graph file="molecule_900.gxl" class="any" />
+  <graph file="molecule_3202.gxl" class="any" />
+  <graph file="molecule_3154.gxl" class="any" />
+  <graph file="molecule_2341.gxl" class="any" />
+  <graph file="molecule_3978.gxl" class="any" />
+  <graph file="molecule_571.gxl" class="any" />
+  <graph file="molecule_3301.gxl" class="any" />
+  <graph file="molecule_397.gxl" class="any" />
+  <graph file="molecule_782.gxl" class="any" />
+  <graph file="molecule_2306.gxl" class="any" />
+  <graph file="molecule_121.gxl" class="any" />
+  <graph file="molecule_1249.gxl" class="any" />
+  <graph file="molecule_3245.gxl" class="any" />
+  <graph file="molecule_2917.gxl" class="any" />
+  <graph file="molecule_1189.gxl" class="any" />
 </GraphCollection>

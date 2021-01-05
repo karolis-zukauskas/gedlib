@@ -30,6 +30,31 @@
       ]
     },
     {
+      "name": "make_sized_datasets",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/tests/kazu/bin/make_sized_datasets_d",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}/tests/kazu/bin",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Enable break on all exceptions",
+          "text": "catch throw",
+          "ignoreFailures": true
+      }
+      ]
+    },
+    {
       "name": "vldbj - lsape methods",
       "type": "cppdbg",
       "request": "launch",
