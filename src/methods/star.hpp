@@ -88,12 +88,12 @@ public:
 
 	// Helper member functions.
 
-	double compute_substitution_cost_(const GEDGraph & g, const GEDGraph & h, GEDGraph::NodeID i, GEDGraph::NodeID k,
+	virtual double compute_substitution_cost_(const GEDGraph & g, const GEDGraph & h, GEDGraph::NodeID i, GEDGraph::NodeID k,
 			const SortedNodeLabels_ & sorted_node_labels_g, const SortedNodeLabels_ & sorted_node_labels_h) const;
 
-	double compute_deletion_cost_(const GEDGraph & g, GEDGraph::NodeID i) const;
+	virtual double compute_deletion_cost_(const GEDGraph & g, GEDGraph::NodeID i) const;
 
-	double compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k) const;
+	virtual double compute_insertion_cost_(const GEDGraph & h, GEDGraph::NodeID k) const;
 };
 
 /**

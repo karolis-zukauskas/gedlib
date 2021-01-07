@@ -479,6 +479,9 @@ set_method(Options::GEDMethod method, const std::string & options) {
   case Options::GEDMethod::BRANCH_UNIFORM:
     ged_method_ = new BranchUniform<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
+  case Options::GEDMethod::BRANCH_UNIFORM2:
+    ged_method_ = new BranchUniform2<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
   case Options::GEDMethod::BRANCH_COMPACT:
     ged_method_ = new BranchCompact<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
@@ -529,6 +532,21 @@ set_method(Options::GEDMethod method, const std::string & options) {
     break;
   case Options::GEDMethod::STAR:
     ged_method_ = new Star<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR2:
+    ged_method_ = new Star2<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR3:
+    ged_method_ = new Star3<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR4:
+    ged_method_ = new Star4<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR5:
+    ged_method_ = new Star5<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR6:
+    ged_method_ = new Star6<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
 #ifdef GUROBI
   case Options::GEDMethod::F1:

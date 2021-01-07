@@ -177,6 +177,7 @@ struct Options {
 		BRANCH_FAST,         //!< Selects ged::BranchFast.
 		BRANCH_TIGHT,        //!< Selects ged::BranchTight.
 		BRANCH_UNIFORM,      //!< Selects ged::BranchUniform.
+    BRANCH_UNIFORM2,      //!< Selects ged::BranchUniform.
 		BRANCH_COMPACT,      //!< Selects ged::BranchCompact.
 		PARTITION,           //!< Selects ged::Partition.
 		HYBRID,              //!< Selects ged::Hybrid.
@@ -193,7 +194,12 @@ struct Options {
 		BP_BEAM,             //!< Selects ged::BPBeam.
 		SIMULATED_ANNEALING, //!< Selects ged::SimulatedAnnealing.
 		HED,				 //!< Selects ged::HED.
-		STAR				 //!< Selects ged::Star.
+		STAR,				 //!< Selects ged::Star.
+    STAR2,				 //!< Selects ged::Star.
+    STAR3,				 //!< Selects ged::Star.
+    STAR4,				 //!< Selects ged::Star.
+    STAR5,				 //!< Selects ged::Star.
+    STAR6				 //!< Selects ged::Star.
 	};
 
 	/*!
@@ -295,6 +301,9 @@ std::ostream & operator<<(std::ostream & os, const Options::GEDMethod & ged_meth
 	case Options::GEDMethod::BRANCH_UNIFORM:
 		os << "BRANCH_UNIFORM";
 		break;
+	case Options::GEDMethod::BRANCH_UNIFORM2:
+		os << "BRANCH_UNIFORM2";
+		break;
 	case Options::GEDMethod::BRANCH_COMPACT:
 		os << "BRANCH_COMPACT";
 		break;
@@ -345,6 +354,21 @@ std::ostream & operator<<(std::ostream & os, const Options::GEDMethod & ged_meth
 		break;
 	case Options::GEDMethod::STAR:
 		os << "STAR";
+		break;
+  case Options::GEDMethod::STAR2:
+		os << "STAR2";
+		break;
+  case Options::GEDMethod::STAR3:
+		os << "STAR3";
+		break;
+  case Options::GEDMethod::STAR4:
+		os << "STAR4";
+		break;
+  case Options::GEDMethod::STAR5:
+		os << "STAR5";
+		break;
+  case Options::GEDMethod::STAR6:
+		os << "STAR6";
 		break;
 #ifdef GUROBI
 	case Options::GEDMethod::F1:
