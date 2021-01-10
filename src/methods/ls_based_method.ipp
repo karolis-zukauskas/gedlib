@@ -34,6 +34,8 @@ template<class UserNodeLabel, class UserEdgeLabel>
 LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
 ~LSBasedMethod() {
 	delete initialization_method_;
+  if (ls_initialization_method_ != nullptr)
+    delete ls_initialization_method_;
 	delete lower_bound_method_;
 }
 
@@ -46,6 +48,7 @@ initial_sulutions_time{0},
 ls_iterations_time{0},
 num_threads_{1},
 initialization_method_{nullptr},
+ls_initialization_method_{nullptr},
 initialization_options_(""),
 lower_bound_method_{nullptr},
 lower_bound_method_options_(""),
@@ -66,7 +69,9 @@ LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
 ged_init_() {
 	if (initialization_method_) {
 		initialization_method_->init();
-	}
+	} else if (ls_initialization_method_) {
+    ls_initialization_method_->init();
+  }
 	if (lower_bound_method_) {
 		lower_bound_method_->init();
 	}
@@ -224,11 +229,22 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     else if (arg == "STAR6") {
       initialization_method_ = new Star6<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     }
+    else if (arg == "REFINE") {
+        ls_initialization_method_ = new Refine<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");
 		}
 		is_valid_option = true;
 	}
+  else if (option == "ls-initialization-method") {
+    if (initialization_options_ != "") {
+      initialization_options_ += " ";
+    }
+    initialization_options_ += "--initialization-method " + arg;
+
+    is_valid_option = true;
+  }
 	else if (option == "randomness") {
 		if (arg == "PSEUDO") {
 			use_real_randomness_ = false;
@@ -374,7 +390,14 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
 		}
 		lower_bound_method_options_ += "--threads " + std::to_string(num_threads_);
 		is_valid_option = true;
-	}
+	} else if (option == "load") {
+    if (initialization_options_ != "") {
+      initialization_options_ += " ";
+    }
+    initialization_options_ += "--load " + arg;
+
+    is_valid_option = true;
+  }
 	else if (option == "num-randpost-loops") {
 		try {
 			num_randpost_loops_ = std::stoul(arg);
