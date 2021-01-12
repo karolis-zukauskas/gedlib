@@ -424,7 +424,9 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
 
 	if (initialization_method_) {
     initialization_method_->set_options(initialization_options_);
-	}
+	} else if (ls_initialization_method_) {
+    ls_initialization_method_->set_options(initialization_options_);
+  }
 	if (lower_bound_method_) {
 		lower_bound_method_->set_options(lower_bound_method_options_);
 	}
@@ -482,6 +484,9 @@ generate_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<
 	if (initialization_method_) {
 		generate_lsape_based_initial_node_maps_(g, h, initial_node_maps, result);
 	}
+  else if (ls_initialization_method_) {
+    generate_ls_based_initial_node_maps_(g, h, initial_node_maps, result);
+  }
   if (num_initial_solutions_ > initial_node_maps.size())
     generate_random_initial_node_maps_(g, h, initial_node_maps);
 }
@@ -494,6 +499,16 @@ generate_lsape_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, 
 	initialization_method_->run_as_util(g, h, lsape_result);
 	initial_node_maps = lsape_result.node_maps();
 	result.set_lower_bound(lsape_result.lower_bound());
+}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
+generate_ls_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<NodeMap> & initial_node_maps, Result & result) {
+	Result ls_result;
+	ls_initialization_method_->run_as_util(g, h, ls_result);
+	initial_node_maps = ls_result.node_maps();
+	result.set_lower_bound(ls_result.lower_bound());
 }
 
 template<class UserNodeLabel, class UserEdgeLabel>
