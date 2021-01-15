@@ -34,7 +34,7 @@
 
 using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 
-constexpr int TEST_THREADS = 8;
+constexpr int TEST_THREADS = ū;
 
 class Method {
 private:
@@ -81,7 +81,7 @@ public:
       if (ged_method_ == ged::Options::GEDMethod::IPFP) {
         name << "IPFP" << " (" << initialization_method_ << ")";
 
-        // TEMP
+        // Could format this better ..
         if (!extra_options_.empty())
           name << " (" << extra_options_ << ")";
       } else if (ged_method_ == ged::Options::GEDMethod::REFINE) {
@@ -123,9 +123,7 @@ public:
       double & avg_lb, double & avg_ub, double & avg_runtime, double& avg_init_time, double& avg_ls_iterations_time, double& avg_num_ls_iterations) const {
 
       env.set_method(ged_method_, options_(dataset));
-      if (dataset != "Protein" or ged_method_ != ged::Options::GEDMethod::PARTITION) {
-        env.init_method();
-      }
+      env.init_method();
 
       std::size_t num_runs{env.graph_ids().second * env.graph_ids().second};
       ged::ProgressBar progress_bar(num_runs);
@@ -137,7 +135,7 @@ public:
       avg_ls_iterations_time = 0;
       avg_num_ls_iterations = 0;
 
-      //std::cout << "\n\tDataset: " << dataset << "   Method: " << name() << std::endl;
+      // std::cout << "\n\tDataset: " << dataset << "   Method: " << name() << std::endl;
 
       for (ged::GEDGraph::GraphID g_id = env.graph_ids().first; g_id != env.graph_ids().second; g_id++) {
         for (ged::GEDGraph::GraphID h_id = env.graph_ids().first; h_id != env.graph_ids().second; h_id++) {
@@ -162,7 +160,7 @@ public:
           }
 
           progress_bar.increment();
-          //std::cout << "\r\t" << name() << ": " << progress_bar << std::flush;
+          // std::cout << "\r\t" << name() << ": " << progress_bar << std::flush;
         }
       }
 
@@ -234,7 +232,7 @@ void run_on_sized_dataset(std::vector<Method> const& methods, std::string const&
     max_max_size_div_10 = 8;
   }
   else if (dataset == "Protein") {
-    // NOTE: originaly Protein is divided into 6 datasets
+    // NOTE: originally Protein is divided into 6 datasets
     max_max_size_div_10 = 7;
   }
   else if (dataset == "Mutagenicity") {
@@ -284,19 +282,22 @@ void run_on_generated_dataset(std::vector<Method> const& methods, std::function<
 
 void test_ls_all_datasets() {
   std::vector<std::string> datasets = {
-    "Letter_HIGH", "Mutagenicity", "AIDS", "Protein", "GREC", "Fingerprint",
+    "AIDS", //"Letter_HIGH", "Mutagenicity", "Protein", "GREC", "Fingerprint",
   };
 
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
-    Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
-    Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
+    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
+    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
+    // Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
+    // Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
+    // Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
   for (auto dataset : datasets) {
@@ -317,20 +318,20 @@ void test_ls_graph_sizes() {
   };
 
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
-    Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
     Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
     Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
     Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
-    Method (ged::Options::GEDMethod::IPFP, "BIPARTITE", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
-    Method (ged::Options::GEDMethod::IPFP, "NODE", true),
-    Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
+    // Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
+    // Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
+    // Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
+    // Method (ged::Options::GEDMethod::IPFP, "BIPARTITE", true),
+    // Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    // Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
+    // Method (ged::Options::GEDMethod::IPFP, "NODE", true),
+    // Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
   for (auto dataset : datasets) {
@@ -347,8 +348,12 @@ void test_ls_graph_sizes() {
 
 void test_ls_rand_graphs() {
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
+    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    //Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
+    //Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
   };
 
   size_t const num_graphs = 100;
@@ -404,17 +409,17 @@ void test_lsape_all() {
     Method (ged::Options::GEDMethod::WALKS, "", true),
     Method (ged::Options::GEDMethod::SUBGRAPH, "", true),
     Method (ged::Options::GEDMethod::BIPARTITE, "", true),
-    // Method (ged::Options::GEDMethod::STAR, "", true),
+    Method (ged::Options::GEDMethod::STAR, "", true),
     // Method (ged::Options::GEDMethod::STAR2, "", true),
     // Method (ged::Options::GEDMethod::STAR3, "", true),
-    // Method (ged::Options::GEDMethod::STAR4, "", true),
+    Method (ged::Options::GEDMethod::STAR4, "", true),
     // Method (ged::Options::GEDMethod::STAR5, "", true),
-    // Method (ged::Options::GEDMethod::STAR6, "", true),
-    // Method (ged::Options::GEDMethod::BRANCH_UNIFORM, "", true),
+    Method (ged::Options::GEDMethod::STAR6, "", true),
     // Method (ged::Options::GEDMethod::BRANCH_UNIFORM2, "", true),
-    // Method (ged::Options::GEDMethod::NODE, "", true),
-    // Method (ged::Options::GEDMethod::BRANCH, "", true),
-    // Method (ged::Options::GEDMethod::BRANCH_FAST, "", true),
+    Method (ged::Options::GEDMethod::NODE, "", true),
+    Method (ged::Options::GEDMethod::BRANCH, "", true),
+    Method (ged::Options::GEDMethod::BRANCH_FAST, "", true),
+    Method (ged::Options::GEDMethod::BRANCH_UNIFORM, "", true),
   };
 
   for (auto dataset : all_datasets) {
@@ -462,8 +467,8 @@ void test_lsape_all() {
 
       try {
         auto generate_graphs = [num_graphs, graph_size, edge_density, &node_labels, &edge_labels, node_variance](GxlGEDEnv& env) -> void {
-          std::mt19937 size_variance_rng(0);          // For graph_size variance
-          std::mt19937 graph_gen_rng(42);             // For generating graphs
+          std::mt19937 size_variance_rng(graph_size);         // For graph_size variance
+          std::mt19937 graph_gen_rng(graph_size);             // For generating graphs
 
           for (size_t i = 0; i < num_graphs; ++i) {
             double multiplier = static_cast<double>((static_cast<long>(size_variance_rng() % 2000)) - 1000) / 1000.0;
@@ -492,10 +497,9 @@ void test_iterations() {
 }
 
 int main(int argc, char* argv[]) {
-  // test_ls_graph_sizes();
-  // test_ls_all_datasets();
-  // test_ls_rand_graphs();
-
+  test_ls_graph_sizes();
+  test_ls_all_datasets();
+  test_ls_rand_graphs();
   test_lsape_all();
 
   return 0;
