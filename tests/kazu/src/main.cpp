@@ -30,11 +30,13 @@
 
 #include "util.hpp"
 #include "graph_gen.hpp"
+#include "graph_statistics.hpp"
 #include <functional>
 
+using GxlExchangeGraph = ged::ExchangeGraph<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 
-constexpr int TEST_THREADS = ū;
+constexpr int TEST_THREADS = 1;
 
 class Method {
 private:
@@ -497,10 +499,57 @@ void test_iterations() {
 }
 
 int main(int argc, char* argv[]) {
-  test_ls_graph_sizes();
-  test_ls_all_datasets();
-  test_ls_rand_graphs();
-  test_lsape_all();
+  GxlGEDEnv env;
+
+  std::mt19937 rng;
+  std::vector<std::string> const node_labels { "A", "B", "C" };
+  std::vector<std::string> const edge_labels { "0", "1" };
+
+
+  // for (size_t n = 10; n < 25; n += 5) {
+  //   for (size_t i = 3; i < 6; ++i) {
+  //     std::stringstream ss;
+  //     ss << "../results/" << "power_" << std::to_string(n) << "_" << std::to_string(i) << ".gxl";
+
+  //     std::string filename = ss.str();
+  //     auto graph_id = graph_gen_power(env, rng, n, i, node_labels, edge_labels);
+  //     env.save_as_gxl_graph(graph_id, filename);
+  //   }
+  // }
+
+
+  auto create_cluster = [&](size_t num_nodes, size_t num_clusters, double p_inner_edge, double p_outer_edge) -> void {
+    std::stringstream ss;
+    ss << "../results/" << "cluster_" << std::to_string(num_nodes) << "_" << std::to_string(num_clusters) << 
+      "_" << std::to_string(p_inner_edge) << "_" << std::to_string(p_outer_edge) << ".gxl";
+
+    std::string filename = ss.str();
+    auto graph_id = graph_gen_cluster(env, rng, num_nodes, num_clusters, p_inner_edge, p_outer_edge, node_labels, edge_labels);
+    env.save_as_gxl_graph(graph_id, filename);
+  };
+
+  create_cluster(20, 4, 0.8, 0);
+  create_cluster(20, 4, 0.8, 0.05);
+  create_cluster(40, 4, 0.8, 0);
+  create_cluster(40, 4, 0.5, 0);
+
+  create_cluster(40, 4, 0.75, 0.01);
+  create_cluster(40, 4, 0.75, 0.02);
+  create_cluster(40, 4, 0.75, 0.03);
+  create_cluster(40, 4, 0.75, 0.04);
+  create_cluster(40, 4, 0.75, 0.05);
+
+  // auto graph_ids = util::setup_environment("AIDS", false, env);
+  // for (auto& id : graph_ids) {
+  //   ged::GraphStatistics stats = graph_stat_compute(env, id);
+  //   std::cout << env.get_graph_name(id) << " D: " << stats.diameter << " R: " << stats.radius << " joint: " << stats.is_joint <<
+  //     " min_pow: " << stats.min_node_degree << " max_pow: " << stats.max_node_degree << std::endl;
+  // }
+
+  // test_ls_graph_sizes();
+  // test_ls_all_datasets();
+  // test_ls_rand_graphs();
+  // test_lsape_all();
 
   return 0;
 }

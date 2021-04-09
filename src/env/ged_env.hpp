@@ -402,6 +402,21 @@ public:
 	 */
 	UserEdgeLabel median_edge_label(const std::vector<UserEdgeLabel> & edge_labels) const;
 
+  GEDGraph const& get_graph_ref(GEDGraph::GraphID graph_id) const {
+    return ged_data_.graphs_.at(graph_id);
+  }
+
+  bool is_edge(GEDGraph::GraphID graph_id, UserNodeID const& from, UserNodeID const& to) {
+    if (ged_data_.graphs_[graph_id].safe_is_edge(original_to_internal_node_ids_[graph_id][from], original_to_internal_node_ids_[graph_id][to]))
+      return true;
+    else
+      return false;
+  }
+
+  size_t node_degree(GEDGraph::GraphID graph_id, UserNodeID const& node_id) {
+    return ged_data_.graphs_[graph_id].degree(original_to_internal_node_ids_[graph_id][node_id]);
+  }
+
 private:
 
 	bool initialized_;

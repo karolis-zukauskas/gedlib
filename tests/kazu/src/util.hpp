@@ -34,6 +34,7 @@
 #define GXL_GEDLIB_SHARED
 #include "../../../src/env/ged_env.hpp"
 
+using GxlExchangeGraph = ged::ExchangeGraph<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 
 namespace util {
