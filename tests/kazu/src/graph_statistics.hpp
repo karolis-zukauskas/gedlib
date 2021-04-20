@@ -78,22 +78,30 @@ size_t _graph_stat_radius(GxlExchangeGraph const& g, std::vector<size_t> const& 
   return min_eccentricity;
 }
 
-void _graph_stat_node_degrees(GxlExchangeGraph const& g, size_t& min_degree, size_t& max_degree) {
+void _graph_stat_node_degrees(GxlExchangeGraph const& g, size_t& min_degree, size_t& max_degree, double& avg_degree) {
   min_degree = infinite_distance;
   max_degree = 0;
+  avg_degree = 0;
 
   for (size_t i = 0; i < g.adj_matrix.size(); ++i) {
     size_t degree = std::accumulate(g.adj_matrix[i].begin(), g.adj_matrix[i].end(), 0);
+    avg_degree += static_cast<double>(degree);
+
     if (min_degree > degree)
       min_degree = degree;
     if (max_degree < degree)
       max_degree = degree;
   }
+
+  avg_degree /= static_cast<double>(g.num_nodes);
 }
 
 struct GraphStatistics {
   GEDGraph::GraphID id;
 
+  size_t num_nodes;
+  size_t num_edges;
+  double avg_degree;
   bool is_joint;
   size_t diameter;
   size_t radius;
@@ -107,10 +115,12 @@ GraphStatistics graph_stat_compute(GxlGEDEnv& env, GEDGraph::GraphID graph_id) {
 
   GraphStatistics stats;
   stats.id = graph_id;
+  stats.num_nodes = g.num_nodes;
+  stats.num_edges = g.num_edges;
   stats.is_joint = _graph_stat_isJoint(distances);
   stats.diameter = _graph_stat_diameter(distances);
   stats.radius = _graph_stat_radius(g, distances);
-  _graph_stat_node_degrees(g, stats.min_node_degree, stats.max_node_degree);
+  _graph_stat_node_degrees(g, stats.min_node_degree, stats.max_node_degree, stats.avg_degree);
 
   return stats;
 }
