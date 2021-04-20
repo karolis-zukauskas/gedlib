@@ -33,14 +33,15 @@
 #include "graph_statistics.hpp"
 #include <functional>
 
-using GxlExchangeGraph = ged::ExchangeGraph<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
-using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
+using namespace ged;
+using GxlExchangeGraph = ExchangeGraph<GXLNodeID, GXLLabel, GXLLabel>;
+using GxlGEDEnv = GEDEnv<GXLNodeID, GXLLabel, GXLLabel>;
 
 constexpr int TEST_THREADS = 1;
 
 class Method {
 private:
-  ged::Options::GEDMethod ged_method_;
+  Options::GEDMethod ged_method_;
   std::string initialization_method_;
   bool use_optimal_lsape_initialization_;
   std::string extra_options_;
@@ -49,7 +50,7 @@ private:
     // TODO: Do we want to run algorithms multithreaded?
     std::string options("--threads 1");
 
-    if (ged_method_ == ged::Options::GEDMethod::REFINE || ged_method_ == ged::Options::GEDMethod::IPFP) {
+    if (ged_method_ == Options::GEDMethod::REFINE || ged_method_ == Options::GEDMethod::IPFP) {
       //options += std::string(" --optimal_initialization ") + (use_optimal_lsape_initialization_ ? "TRUE" : "FALSE");
       options += " --initialization-method " + initialization_method_;
 
@@ -60,10 +61,10 @@ private:
       }
     }
 
-    if (ged_method_ == ged::Options::GEDMethod::WALKS) {
+    if (ged_method_ == Options::GEDMethod::WALKS) {
       options += " --load ../ini/" + dataset + "_walks.ini";
     }
-    if (ged_method_ == ged::Options::GEDMethod::SUBGRAPH) {
+    if (ged_method_ == Options::GEDMethod::SUBGRAPH) {
       options += " --load ../ini/" + dataset + "_subgraph.ini";
     }
 
@@ -71,7 +72,7 @@ private:
   }
 
 public:
-  Method(ged::Options::GEDMethod ged_method, std::string const& initialization_method, bool use_optimal_lsape_initialization, std::string const& extra_options = "")
+  Method(Options::GEDMethod ged_method, std::string const& initialization_method, bool use_optimal_lsape_initialization, std::string const& extra_options = "")
     : ged_method_{ged_method},
       initialization_method_{initialization_method},
       use_optimal_lsape_initialization_{use_optimal_lsape_initialization},
@@ -80,41 +81,43 @@ public:
     std::string name() const {
       std::stringstream name;
 
-      if (ged_method_ == ged::Options::GEDMethod::IPFP) {
+      if (ged_method_ == Options::GEDMethod::IPFP) {
         name << "IPFP" << " (" << initialization_method_ << ")";
 
         // Could format this better ..
         if (!extra_options_.empty())
           name << " (" << extra_options_ << ")";
-      } else if (ged_method_ == ged::Options::GEDMethod::REFINE) {
+      } else if (ged_method_ == Options::GEDMethod::REFINE) {
         name << "REFINE" << " (" << initialization_method_ << ")";
-      } else if (ged_method_ == ged::Options::GEDMethod::BIPARTITE) {
+      } else if (ged_method_ == Options::GEDMethod::BIPARTITE) {
         name << "BP";
-      } else if (ged_method_ == ged::Options::GEDMethod::BRANCH_FAST) {
+      } else if (ged_method_ == Options::GEDMethod::BP_BEAM) {
+        name << "BP_BEAM";
+      } else if (ged_method_ == Options::GEDMethod::BRANCH_FAST) {
         name << "BRANCHFAST";
-      } else if (ged_method_ == ged::Options::GEDMethod::BRANCH) {
+      } else if (ged_method_ == Options::GEDMethod::BRANCH) {
         name << "BRANCH";
-      } else if (ged_method_ == ged::Options::GEDMethod::BRANCH_UNIFORM) {
+      } else if (ged_method_ == Options::GEDMethod::BRANCH_UNIFORM) {
         name << "BRANCH_UNIFORM";
-      } else if (ged_method_ == ged::Options::GEDMethod::BRANCH_UNIFORM2) {
+      } else if (ged_method_ == Options::GEDMethod::BRANCH_UNIFORM2) {
         name << "BRANCH_UNIFORM2";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR) {
+      } else if (ged_method_ == Options::GEDMethod::STAR) {
         name << "STAR";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR2) {
+      } else if (ged_method_ == Options::GEDMethod::STAR2) {
         name << "STAR2";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR3) {
+      } else if (ged_method_ == Options::GEDMethod::STAR3) {
         name << "STAR3";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR4) {
+      } else if (ged_method_ == Options::GEDMethod::STAR4) {
         name << "STAR4";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR5) {
+      } else if (ged_method_ == Options::GEDMethod::STAR5) {
         name << "STAR5";
-      } else if (ged_method_ == ged::Options::GEDMethod::STAR6) {
+      } else if (ged_method_ == Options::GEDMethod::STAR6) {
         name << "STAR6";
-      } else if (ged_method_ == ged::Options::GEDMethod::SUBGRAPH) {
+      } else if (ged_method_ == Options::GEDMethod::SUBGRAPH) {
         name << "SUBGRAPH";
-      } else if (ged_method_ == ged::Options::GEDMethod::WALKS) {
+      } else if (ged_method_ == Options::GEDMethod::WALKS) {
         name << "WALKS";
-      } else if (ged_method_ == ged::Options::GEDMethod::NODE) {
+      } else if (ged_method_ == Options::GEDMethod::NODE) {
         name << "NODE";
       }
 
@@ -128,7 +131,7 @@ public:
       env.init_method();
 
       std::size_t num_runs{env.graph_ids().second * env.graph_ids().second};
-      ged::ProgressBar progress_bar(num_runs);
+      ProgressBar progress_bar(num_runs);
 
       avg_runtime = 0;
       avg_ub = 0;
@@ -139,10 +142,10 @@ public:
 
       // std::cout << "\n\tDataset: " << dataset << "   Method: " << name() << std::endl;
 
-      for (ged::GEDGraph::GraphID g_id = env.graph_ids().first; g_id != env.graph_ids().second; g_id++) {
-        for (ged::GEDGraph::GraphID h_id = env.graph_ids().first; h_id != env.graph_ids().second; h_id++) {
-          ged::GEDGraph::GraphID _g_id = g_id;
-          ged::GEDGraph::GraphID _h_id = h_id;
+      for (GEDGraph::GraphID g_id = env.graph_ids().first; g_id != env.graph_ids().second; g_id++) {
+        for (GEDGraph::GraphID h_id = env.graph_ids().first; h_id != env.graph_ids().second; h_id++) {
+          GEDGraph::GraphID _g_id = g_id;
+          GEDGraph::GraphID _h_id = h_id;
 
           // Some greedy LSAPE solvers require graph nodes to be n >= m
           if (ensure_n_greater_m && env.get_num_nodes(_g_id) < env.get_num_nodes(_h_id))
@@ -154,7 +157,7 @@ public:
           avg_ub += env.get_upper_bound(_g_id, _h_id);
           avg_runtime += env.get_runtime(_g_id, _h_id);
 
-          auto pLSMethod = dynamic_cast<ged::LSBasedMethod<ged::GXLLabel, ged::GXLLabel>*>(env.get_method());
+          auto pLSMethod = dynamic_cast<LSBasedMethod<GXLLabel, GXLLabel>*>(env.get_method());
           if (pLSMethod != nullptr) {
             avg_init_time += pLSMethod->initial_sulutions_time.count();
             avg_ls_iterations_time += pLSMethod->ls_iterations_time.count();
@@ -246,7 +249,7 @@ void run_on_sized_dataset(std::vector<Method> const& methods, std::string const&
 
     auto setup_ged_env = [&dataset, &max_size_dev_10]() -> GxlGEDEnv {
       GxlGEDEnv env;
-      util::setup_environment(dataset, max_size_dev_10, env);
+      ::util::setup_environment(dataset, max_size_dev_10, env);
 
       return env;
     };
@@ -260,7 +263,7 @@ void run_on_test_dataset(std::vector<Method> const& methods, std::string const& 
 
   auto setup_ged_env = [&dataset]() -> GxlGEDEnv {
     GxlGEDEnv env;
-    util::setup_environment(dataset, false, env);
+    ::util::setup_environment(dataset, false, env);
 
     return env;
   };
@@ -288,18 +291,19 @@ void test_ls_all_datasets() {
   };
 
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
-    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
-    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
-    // Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
-    // Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
-    // Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
-    // Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
+    // Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
+    // Method (Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    // Method (Options::GEDMethod::IPFP, "BRANCH", true),
+    Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method NODE"),
+    // Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    // Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
+    // Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
+    // Method (Options::GEDMethod::IPFP, "WALKS", true),
+    // Method (Options::GEDMethod::IPFP, "SUBGRAPH", true),
+    // Method (Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (Options::GEDMethod::IPFP, "STAR5", true),
+    // Method (Options::GEDMethod::IPFP, "STAR6", true),
+    // Method (Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
   for (auto dataset : datasets) {
@@ -320,20 +324,20 @@ void test_ls_graph_sizes() {
   };
 
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
-    // Method (ged::Options::GEDMethod::IPFP, "WALKS", true),
-    // Method (ged::Options::GEDMethod::IPFP, "SUBGRAPH", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR4", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    // Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
-    // Method (ged::Options::GEDMethod::IPFP, "BIPARTITE", true),
-    // Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
-    // Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
-    // Method (ged::Options::GEDMethod::IPFP, "NODE", true),
-    // Method (ged::Options::GEDMethod::IPFP, "RANDOM", true),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
+    // Method (Options::GEDMethod::IPFP, "WALKS", true),
+    // Method (Options::GEDMethod::IPFP, "SUBGRAPH", true),
+    // Method (Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (Options::GEDMethod::IPFP, "STAR4", true),
+    // Method (Options::GEDMethod::IPFP, "STAR5", true),
+    // Method (Options::GEDMethod::IPFP, "STAR6", true),
+    // Method (Options::GEDMethod::IPFP, "BIPARTITE", true),
+    // Method (Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    // Method (Options::GEDMethod::IPFP, "BRANCH", true),
+    // Method (Options::GEDMethod::IPFP, "NODE", true),
+    // Method (Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
   for (auto dataset : datasets) {
@@ -350,12 +354,12 @@ void test_ls_graph_sizes() {
 
 void test_ls_rand_graphs() {
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH_FAST", true),
-    Method (ged::Options::GEDMethod::IPFP, "BRANCH", true),
-    Method (ged::Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
-    //Method (ged::Options::GEDMethod::IPFP, "STAR5", true),
-    //Method (ged::Options::GEDMethod::IPFP, "STAR6", true),
+    Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
+    Method (Options::GEDMethod::IPFP, "BRANCH_FAST", true),
+    Method (Options::GEDMethod::IPFP, "BRANCH", true),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    //Method (Options::GEDMethod::IPFP, "STAR5", true),
+    //Method (Options::GEDMethod::IPFP, "STAR6", true),
   };
 
   size_t const num_graphs = 100;
@@ -385,10 +389,10 @@ void test_ls_rand_graphs() {
             double multiplier = static_cast<double>((static_cast<long>(size_variance_rng() % 2000)) - 1000) / 1000.0;
             size_t num_nodes = graph_size + static_cast<size_t>(std::round(multiplier * static_cast<double>(node_variance)));
 
-            ged::graph_gen_random(env, graph_gen_rng, num_nodes, edge_density, node_labels, edge_labels);
+            graph_gen_random(env, graph_gen_rng, num_nodes, edge_density, node_labels, edge_labels);
           }
 
-          util::setup_rand_environment(env);
+          ::util::setup_rand_environment(env);
         };
 
         run_on_generated_dataset(methods, generate_graphs, dataset, edge_density, false, results_filename);
@@ -408,20 +412,20 @@ void test_lsape_all() {
   };
 
   std::vector<Method> const methods {
-    Method (ged::Options::GEDMethod::WALKS, "", true),
-    Method (ged::Options::GEDMethod::SUBGRAPH, "", true),
-    Method (ged::Options::GEDMethod::BIPARTITE, "", true),
-    Method (ged::Options::GEDMethod::STAR, "", true),
-    // Method (ged::Options::GEDMethod::STAR2, "", true),
-    // Method (ged::Options::GEDMethod::STAR3, "", true),
-    Method (ged::Options::GEDMethod::STAR4, "", true),
-    // Method (ged::Options::GEDMethod::STAR5, "", true),
-    Method (ged::Options::GEDMethod::STAR6, "", true),
-    // Method (ged::Options::GEDMethod::BRANCH_UNIFORM2, "", true),
-    Method (ged::Options::GEDMethod::NODE, "", true),
-    Method (ged::Options::GEDMethod::BRANCH, "", true),
-    Method (ged::Options::GEDMethod::BRANCH_FAST, "", true),
-    Method (ged::Options::GEDMethod::BRANCH_UNIFORM, "", true),
+    Method (Options::GEDMethod::WALKS, "", true),
+    Method (Options::GEDMethod::SUBGRAPH, "", true),
+    Method (Options::GEDMethod::BIPARTITE, "", true),
+    Method (Options::GEDMethod::STAR, "", true),
+    // Method (Options::GEDMethod::STAR2, "", true),
+    // Method (Options::GEDMethod::STAR3, "", true),
+    Method (Options::GEDMethod::STAR4, "", true),
+    // Method (Options::GEDMethod::STAR5, "", true),
+    Method (Options::GEDMethod::STAR6, "", true),
+    // Method (Options::GEDMethod::BRANCH_UNIFORM2, "", true),
+    Method (Options::GEDMethod::NODE, "", true),
+    Method (Options::GEDMethod::BRANCH, "", true),
+    Method (Options::GEDMethod::BRANCH_FAST, "", true),
+    Method (Options::GEDMethod::BRANCH_UNIFORM, "", true),
   };
 
   for (auto dataset : all_datasets) {
@@ -476,10 +480,10 @@ void test_lsape_all() {
             double multiplier = static_cast<double>((static_cast<long>(size_variance_rng() % 2000)) - 1000) / 1000.0;
             size_t num_nodes = graph_size + static_cast<size_t>(std::round(multiplier * static_cast<double>(node_variance)));
 
-            ged::graph_gen_random(env, graph_gen_rng, num_nodes, edge_density, node_labels, edge_labels);
+            graph_gen_random(env, graph_gen_rng, num_nodes, edge_density, node_labels, edge_labels);
           }
 
-          util::setup_rand_environment(env);
+          ::util::setup_rand_environment(env);
         };
 
         run_on_generated_dataset(methods, generate_graphs, dataset, edge_density, false, results_filename);
@@ -498,13 +502,114 @@ void test_iterations() {
 
 }
 
-int main(int argc, char* argv[]) {
-  GxlGEDEnv env;
-
-  std::mt19937 rng;
+void compute_statistics() {
+  std::vector<std::string> all_datasets = {
+    "Letter_HIGH", "Mutagenicity", "AIDS", "Protein", "GREC", "Fingerprint",
+  };
+  std::vector<std::string> sized_datasets = {
+    "Mutagenicity", "AIDS", "Protein",
+  };
   std::vector<std::string> const node_labels { "A", "B", "C" };
   std::vector<std::string> const edge_labels { "0", "1" };
 
+  auto print_statistics = [](GxlGEDEnv& env, std::string const& dataset) -> void {
+    double is_joint = 0.0;
+    double num_nodes = 0.0;
+    double num_edges = 0.0;
+    double avg_degree = 0.0;
+    double diameter = 0.0;
+    double radius = 0.0;
+    double min_node_degree = 0.0;
+    double max_node_degree = 0.0;
+
+    for (GEDGraph::GraphID i = env.graph_ids().first; i != env.graph_ids().second; ++i) {
+      GraphStatistics stats = graph_stat_compute(env, i);
+
+      is_joint += static_cast<double>(stats.is_joint);
+      num_nodes += static_cast<double>(stats.num_nodes);
+      num_edges += static_cast<double>(stats.num_edges);
+      avg_degree += stats.avg_degree;
+      diameter += static_cast<double>(stats.diameter);
+      radius += static_cast<double>(stats.radius);
+      min_node_degree += static_cast<double>(stats.min_node_degree);
+      max_node_degree += static_cast<double>(stats.max_node_degree);
+    }
+
+    is_joint /= static_cast<double>(env.num_graphs());
+    num_nodes /= static_cast<double>(env.num_graphs());
+    num_edges /= static_cast<double>(env.num_graphs());
+    avg_degree /= static_cast<double>(env.num_graphs());
+    diameter /= static_cast<double>(env.num_graphs());
+    radius /= static_cast<double>(env.num_graphs());
+    min_node_degree /= static_cast<double>(env.num_graphs());
+    max_node_degree /= static_cast<double>(env.num_graphs());
+
+
+    std::cout << std::setprecision(3) << dataset << "\tis_joint: " << is_joint << "\tdiameter: " << diameter
+              << "\tradius: " << radius << "\tmin_node_degree: " << min_node_degree << "\tmax_node_degree: " << max_node_degree
+              << "\tnum_nodes: " << num_nodes << "\tnum_edges: " << num_edges << "\tavg_degree: " << avg_degree << std::endl;
+  };
+
+  for (auto const& dataset : all_datasets) {
+    GxlGEDEnv env;
+    ::util::setup_environment(dataset, false, env);
+    print_statistics(env, dataset);
+  }
+
+  std::cout << std::endl;
+
+  for (auto const& dataset : sized_datasets) {
+    std::size_t max_max_size_div_10 = 0;
+    if (dataset == "AIDS") 
+      max_max_size_div_10 = 8;
+    else if (dataset == "Protein")
+      max_max_size_div_10 = 7;
+    else if (dataset == "Mutagenicity")
+      max_max_size_div_10 = 10;
+
+    for (std::size_t max_size_dev_10 = 1; max_size_dev_10 <= max_max_size_div_10; max_size_dev_10++) {
+      GxlGEDEnv env;
+      ::util::setup_environment(dataset, max_size_dev_10, env);
+      print_statistics(env, dataset);
+    }
+  }
+
+  std::cout << std::endl;
+
+  for (size_t num_nodes = 5; num_nodes <= 40; num_nodes += 5) {
+    GxlGEDEnv env;
+    std::mt19937 rng;
+
+    for (size_t i = 0; i < 100; ++i)
+      graph_gen_power(env, rng, num_nodes, 2, node_labels, edge_labels);
+
+    print_statistics(env, "power" + std::to_string(num_nodes));
+  }
+
+  std::cout << std::endl;
+
+  for (size_t num_nodes = 20; num_nodes <= 40; num_nodes += 20) {
+    GxlGEDEnv env;
+    std::mt19937 rng;
+
+    for (size_t i = 0; i < 100; ++i)
+      graph_gen_cluster(env, rng, num_nodes, 4, 0.8, 0.02, node_labels, edge_labels);
+
+    print_statistics(env, "cluster" + std::to_string(num_nodes));
+  }
+}
+
+int main(int argc, char* argv[]) {
+  test_ls_all_datasets();
+
+  //compute_statistics();
+
+
+  // GxlGEDEnv env;
+
+  // std::mt19937 rng;
+  // std::vector<std::string> const node_labels { "A", "B", "C" };
+  // std::vector<std::string> const edge_labels { "0", "1" };
 
   // for (size_t n = 10; n < 25; n += 5) {
   //   for (size_t i = 3; i < 6; ++i) {
@@ -517,31 +622,30 @@ int main(int argc, char* argv[]) {
   //   }
   // }
 
+  // auto create_cluster = [&](size_t num_nodes, size_t num_clusters, double p_inner_edge, double p_outer_edge) -> void {
+  //   std::stringstream ss;
+  //   ss << "../results/" << "cluster_" << std::to_string(num_nodes) << "_" << std::to_string(num_clusters) << 
+  //     "_" << std::to_string(p_inner_edge) << "_" << std::to_string(p_outer_edge) << ".gxl";
 
-  auto create_cluster = [&](size_t num_nodes, size_t num_clusters, double p_inner_edge, double p_outer_edge) -> void {
-    std::stringstream ss;
-    ss << "../results/" << "cluster_" << std::to_string(num_nodes) << "_" << std::to_string(num_clusters) << 
-      "_" << std::to_string(p_inner_edge) << "_" << std::to_string(p_outer_edge) << ".gxl";
+  //   std::string filename = ss.str();
+  //   auto graph_id = graph_gen_cluster(env, rng, num_nodes, num_clusters, p_inner_edge, p_outer_edge, node_labels, edge_labels);
+  //   env.save_as_gxl_graph(graph_id, filename);
+  // };
 
-    std::string filename = ss.str();
-    auto graph_id = graph_gen_cluster(env, rng, num_nodes, num_clusters, p_inner_edge, p_outer_edge, node_labels, edge_labels);
-    env.save_as_gxl_graph(graph_id, filename);
-  };
+  // create_cluster(20, 4, 0.8, 0);
+  // create_cluster(20, 4, 0.8, 0.05);
+  // create_cluster(40, 4, 0.8, 0);
+  // create_cluster(40, 4, 0.5, 0);
 
-  create_cluster(20, 4, 0.8, 0);
-  create_cluster(20, 4, 0.8, 0.05);
-  create_cluster(40, 4, 0.8, 0);
-  create_cluster(40, 4, 0.5, 0);
+  // create_cluster(40, 4, 0.75, 0.01);
+  // create_cluster(40, 4, 0.75, 0.02);
+  // create_cluster(40, 4, 0.75, 0.03);
+  // create_cluster(40, 4, 0.75, 0.04);
+  // create_cluster(40, 4, 0.75, 0.05);
 
-  create_cluster(40, 4, 0.75, 0.01);
-  create_cluster(40, 4, 0.75, 0.02);
-  create_cluster(40, 4, 0.75, 0.03);
-  create_cluster(40, 4, 0.75, 0.04);
-  create_cluster(40, 4, 0.75, 0.05);
-
-  // auto graph_ids = util::setup_environment("AIDS", false, env);
+  // auto graph_ids = ::util::setup_environment("AIDS", false, env);
   // for (auto& id : graph_ids) {
-  //   ged::GraphStatistics stats = graph_stat_compute(env, id);
+  //   GraphStatistics stats = graph_stat_compute(env, id);
   //   std::cout << env.get_graph_name(id) << " D: " << stats.diameter << " R: " << stats.radius << " joint: " << stats.is_joint <<
   //     " min_pow: " << stats.min_node_degree << " max_pow: " << stats.max_node_degree << std::endl;
   // }

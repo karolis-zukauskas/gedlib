@@ -232,6 +232,9 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     else if (arg == "REFINE") {
         ls_initialization_method_ = new Refine<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     }
+    else if (arg == "BP_BEAM") {
+        ls_initialization_method_ = new BPBeam<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");
 		}
