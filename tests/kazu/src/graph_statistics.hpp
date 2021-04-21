@@ -63,16 +63,31 @@ size_t _graph_stat_diameter(std::vector<size_t> const& distances) {
 
 size_t _graph_stat_radius(GxlExchangeGraph const& g, std::vector<size_t> const& distances) {
   size_t min_eccentricity = infinite_distance;
+  size_t min_node_index = infinite_distance;
+
   for (size_t i = 0; i < g.num_nodes; ++i) {
     size_t eccentricity = 0;
+
     for (size_t j = 0; j < g.num_nodes; ++j) {
       if (distances[i * g.num_nodes + j] > eccentricity && distances[i * g.num_nodes + j] != infinite_distance) {
         eccentricity = distances[i * g.num_nodes + j];
       }
     }
 
-    if (min_eccentricity > eccentricity)
+    if (min_eccentricity == infinite_distance) {
       min_eccentricity = eccentricity;
+      min_node_index = i;
+      continue;
+    }
+
+    // Find radius of the largest component ("disconnected" sub-graph)
+    if (distances[min_node_index * g.num_nodes + i] == infinite_distance && min_eccentricity < eccentricity) {
+      min_eccentricity = eccentricity;
+      min_node_index = i;
+    } else if (distances[min_node_index * g.num_nodes + i] != infinite_distance && min_eccentricity > eccentricity) {
+      min_eccentricity = eccentricity;
+      min_node_index = i;
+    }
   }
 
   return min_eccentricity;
@@ -138,24 +153,16 @@ void graph_stat_compute_all(GxlGEDEnv& env, GraphStatsMap& stats) {
     stats[i] = graph_stat_compute_single(env, i);
 }
 
+// Structure for holding comparison information of two given graphs
+// All values are callculated as: min_X(g1, g2) / max_X(g1, g2), where X refers
+// to a specific attribute of the graph, e.g. node_count.
 struct GraphDiff {
-  // Difference in node count. Calculated as: min_nodes(g1, g2) / max_nodes(g1, g2).
-  // Values are in range (0, 1].
   double node_count;
-  // Difference in edge count. Calculated as: min_edges(g1, g2) / max_edges(g1, g2).
-  // Values are in range (0, 1].
   double edge_count;
-
   double avg_node_degree;
-
-  // Difference in edge density. Calculated as: min_edge_density(g1, g2) / max_edge_density(g1, g2).
-  // Values are in range (0, 1].
   double edge_density;
-
   double diameter;
-
   double radius;
-
   bool both_joint;
 };
 
@@ -167,7 +174,7 @@ double _calculate_ratio(T a, T b) {
   if (max <= 0)
     return 0;
   else
-    return min / man;
+    return min / max;
 }
 
 GraphDiff graph_diff_compute(GxlGEDEnv& env, GraphStatsMap const& stats, GEDGraph::GraphID g_id, GEDGraph::GraphID h_id) {
