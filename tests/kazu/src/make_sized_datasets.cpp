@@ -44,8 +44,8 @@ int main() {
         if (filename.find(".gxl") == -1)
           continue;
 
-        size_t g_id = ged_env.load_gxl_graph(graph_dir, filename, util::node_type(dataset), util::edge_type(dataset),
-          util::irrelevant_node_attributes(dataset), util::irrelevant_edge_attributes(dataset), ged::undefined(), "any");
+        size_t g_id = ged_env.load_gxl_graph(graph_dir, filename, ::util::node_type(dataset), ::util::edge_type(dataset),
+          ::util::irrelevant_node_attributes(dataset), ::util::irrelevant_edge_attributes(dataset), ged::undefined(), "any");
 
         auto num_nodes = ged_env.get_num_nodes(g_id);
         auto bin_id = static_cast<uint>(num_nodes) / 10;

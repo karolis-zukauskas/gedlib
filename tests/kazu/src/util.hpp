@@ -34,6 +34,13 @@
 #define GXL_GEDLIB_SHARED
 #include "../../../src/env/ged_env.hpp"
 
+using namespace ged;
+
+#include <functional>
+#include <vector>
+#include <numeric>
+#include <cassert>
+
 using GxlExchangeGraph = ged::ExchangeGraph<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 
@@ -237,6 +244,38 @@ void setup_datasets(std::vector<std::string> & datasets) {
 
 void setup_size_test_datasets(std::vector<std::string> & datasets) {
   datasets = {"Mutagenicity", "AIDS", "Protein"};
+}
+
+std::string create_stats_file(std::string const& base_name) {
+  std::time_t t = std::time(0);
+  std::tm* now = std::localtime(&t);
+  std::stringstream ss;
+  ss << "../results/stats" << "_" << base_name << "_" << now->tm_mon << "-" << now->tm_mday << "_"
+    << now->tm_hour << "-" << now->tm_min << "-" << now->tm_sec << ".csv";
+
+  std::string filename = ss.str();
+  std::ofstream stats_file(filename.c_str(), std::ios_base::trunc);
+
+  stats_file << "method, ub, runtime, dataset, g_id, h_id, node_count, edge_count, avg_node_degree, edge_density, diameter, radius, both_joint" << std::endl;
+  stats_file.close();
+
+  return filename;
+}
+
+std::string create_result_file(std::string const& base_name, std::string const& dataset) {
+  std::time_t t = std::time(0);
+  std::tm* now = std::localtime(&t);
+  std::stringstream ss;
+  ss << "../results/" << base_name << "_" << dataset << "_" << now->tm_mon << "-" << now->tm_mday << "_"
+    << now->tm_hour << "-" << now->tm_min << "-" << now->tm_sec << ".csv";
+
+  std::string filename = ss.str();
+  std::ofstream result_file(filename.c_str(), std::ios_base::trunc);
+
+  result_file << "method, num_nodes, edge_density, lb, ub, runtime, ls_iterations, init_solutions_t, ls_iterations_t" << std::endl;
+  result_file.close();
+
+  return filename;
 }
 
 }

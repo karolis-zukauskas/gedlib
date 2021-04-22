@@ -1,0 +1,108 @@
+#ifndef SRC_KAZU_TEST_STATISTICS_HPP_
+#define SRC_KAZU_TEST_STATISTICS_HPP_
+
+#include "../util.hpp"
+#include "../graph_statistics.hpp"
+
+void compute_statistics() {
+  std::vector<std::string> all_datasets = {
+    "Letter_HIGH", "Mutagenicity", "AIDS", "Protein", "GREC", "Fingerprint",
+  };
+  std::vector<std::string> sized_datasets = {
+    "Mutagenicity", "AIDS", "Protein",
+  };
+  std::vector<std::string> const node_labels { "A", "B", "C" };
+  std::vector<std::string> const edge_labels { "0", "1" };
+
+  auto print_statistics = [](GxlGEDEnv& env, std::string const& dataset) -> void {
+    double is_joint = 0.0;
+    double num_nodes = 0.0;
+    double num_edges = 0.0;
+    double avg_degree = 0.0;
+    double edge_density = 0.0;
+    double diameter = 0.0;
+    double radius = 0.0;
+    double min_node_degree = 0.0;
+    double max_node_degree = 0.0;
+
+    for (GEDGraph::GraphID i = env.graph_ids().first; i != env.graph_ids().second; ++i) {
+      GraphStatistics stats = graph_stat_compute_single(env, i);
+
+      is_joint += static_cast<double>(stats.is_joint);
+      num_nodes += static_cast<double>(stats.num_nodes);
+      num_edges += static_cast<double>(stats.num_edges);
+      avg_degree += stats.avg_degree;
+      edge_density += stats.edge_density;
+      diameter += static_cast<double>(stats.diameter);
+      radius += static_cast<double>(stats.radius);
+      min_node_degree += static_cast<double>(stats.min_node_degree);
+      max_node_degree += static_cast<double>(stats.max_node_degree);
+    }
+
+    is_joint /= static_cast<double>(env.num_graphs());
+    num_nodes /= static_cast<double>(env.num_graphs());
+    num_edges /= static_cast<double>(env.num_graphs());
+    avg_degree /= static_cast<double>(env.num_graphs());
+    edge_density /= static_cast<double>(env.num_graphs());
+    diameter /= static_cast<double>(env.num_graphs());
+    radius /= static_cast<double>(env.num_graphs());
+    min_node_degree /= static_cast<double>(env.num_graphs());
+    max_node_degree /= static_cast<double>(env.num_graphs());
+
+
+    std::cout << std::setprecision(3) << dataset << "\tis_joint: " << is_joint << "\tdiameter: " << diameter
+              << "\tradius: " << radius << "\tmin_node_degree: " << min_node_degree << "\tmax_node_degree: " << max_node_degree
+              << "\tnum_nodes: " << num_nodes << "\tnum_edges: " << num_edges << "\tavg_degree: " << avg_degree
+              << "\tedge_density: " << edge_density << std::endl;
+  };
+
+  for (auto const& dataset : all_datasets) {
+    GxlGEDEnv env;
+    ::util::setup_environment(dataset, false, env);
+    print_statistics(env, dataset);
+  }
+
+  std::cout << std::endl;
+
+  for (auto const& dataset : sized_datasets) {
+    std::size_t max_max_size_div_10 = 0;
+    if (dataset == "AIDS") 
+      max_max_size_div_10 = 8;
+    else if (dataset == "Protein")
+      max_max_size_div_10 = 7;
+    else if (dataset == "Mutagenicity")
+      max_max_size_div_10 = 10;
+
+    for (std::size_t max_size_dev_10 = 1; max_size_dev_10 <= max_max_size_div_10; max_size_dev_10++) {
+      GxlGEDEnv env;
+      ::util::setup_environment(dataset, max_size_dev_10, env);
+      print_statistics(env, dataset);
+    }
+  }
+
+  std::cout << std::endl;
+
+  for (size_t num_nodes = 5; num_nodes <= 40; num_nodes += 5) {
+    GxlGEDEnv env;
+    std::mt19937 rng;
+
+    for (size_t i = 0; i < 100; ++i)
+      graph_gen_power(env, rng, num_nodes, 2, node_labels, edge_labels);
+
+    print_statistics(env, "power" + std::to_string(num_nodes));
+  }
+
+  std::cout << std::endl;
+
+  for (size_t num_nodes = 20; num_nodes <= 40; num_nodes += 20) {
+    GxlGEDEnv env;
+    std::mt19937 rng;
+
+    for (size_t i = 0; i < 100; ++i)
+      graph_gen_cluster(env, rng, num_nodes, 4, 0.8, 0.02, node_labels, edge_labels);
+
+    print_statistics(env, "cluster" + std::to_string(num_nodes));
+  }
+}
+
+#endif
