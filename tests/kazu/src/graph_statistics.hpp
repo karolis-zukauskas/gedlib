@@ -154,17 +154,92 @@ void graph_stat_compute_all(GxlGEDEnv& env, GraphStatsMap& stats) {
 }
 
 // Structure for holding comparison information of two given graphs
-// All values are callculated as: min_X(g1, g2) / max_X(g1, g2), where X refers
+// Most values are callculated as: min_X(g1, g2) / max_X(g1, g2), where X refers
 // to a specific attribute of the graph, e.g. node_count.
 struct GraphDiff {
   double node_count;
   double edge_count;
   double avg_node_degree;
   double edge_density;
+
+  // Ratio of matching node label count.
+  double node_label_count;
+  // Ratio of matching node label count.
+  double edge_label_count;
+
   double diameter;
   double radius;
   bool both_joint;
 };
+
+
+double graph_diff_compute_node_labels(GxlExchangeGraph const& g, GxlExchangeGraph const& h) {
+  auto count_labels = [](GxlExchangeGraph const& g) -> std::map<ged::GXLLabel, size_t> {
+    std::map<ged::GXLLabel, size_t> label_map;
+
+    for (auto const& label : g.node_labels) {
+      auto iterator = label_map.find(label);
+      if (iterator != label_map.end())
+        (*iterator).second += 1;
+      else
+        label_map[label] = 1;
+    }
+
+    return label_map;
+  };
+
+  std::map<ged::GXLLabel, size_t> g_label_map = count_labels(g);
+  std::map<ged::GXLLabel, size_t> h_label_map = count_labels(h);
+
+  size_t matching_labels = 0;
+  for (auto const& g_label : g_label_map) {
+    auto h_it = h_label_map.find(g_label.first);
+    if (h_it != h_label_map.end())
+      matching_labels += std::min(g_label.second, (*h_it).second);
+  }
+
+  size_t const max_nodes = std::max(g.num_nodes, h.num_nodes);
+  if (max_nodes == 0)
+    return 0;
+
+  return static_cast<double>(matching_labels) / static_cast<double>(max_nodes);
+}
+
+double graph_diff_compute_edge_labels(GxlExchangeGraph const& g, GxlExchangeGraph const& h) {
+  auto count_labels = [](GxlExchangeGraph const& g) -> std::map<ged::GXLLabel, size_t> {
+    std::map<ged::GXLLabel, size_t> label_map;
+
+    for (auto const& label : g.edge_labels) {
+      auto iterator = label_map.find(label.second);
+      if (iterator != label_map.end())
+        (*iterator).second += 1;
+      else
+        label_map[label.second] = 1;
+    }
+
+    return label_map;
+  };
+
+  std::map<ged::GXLLabel, size_t> g_label_map = count_labels(g);
+  std::map<ged::GXLLabel, size_t> h_label_map = count_labels(h);
+
+  size_t matching_labels = 0;
+  for (auto const& g_label : g_label_map) {
+    auto h_it = h_label_map.find(g_label.first);
+    if (h_it != h_label_map.end())
+      matching_labels += std::min(g_label.second, (*h_it).second);
+  }
+
+  // We are working with undirected graphs
+  assert(matching_labels % 2 == 0);
+  matching_labels /= 2;
+
+  size_t const max_edges = std::max(g.num_edges, h.num_edges);
+  if (max_edges == 0)
+    return 0;
+
+  return static_cast<double>(matching_labels) / static_cast<double>(max_edges);
+}
 
 template<typename T>
 double _calculate_ratio(T a, T b) {
@@ -191,6 +266,8 @@ GraphDiff graph_diff_compute(GxlGEDEnv& env, GraphStatsMap const& stats, GEDGrap
   diff.edge_count = _calculate_ratio(g.num_edges, h.num_edges);
   diff.avg_node_degree = _calculate_ratio(g_stats.avg_degree, h_stats.avg_degree);
   diff.edge_density = _calculate_ratio(g_stats.edge_density, h_stats.edge_density);
+  diff.node_label_count = graph_diff_compute_node_labels(g, h);
+  diff.edge_label_count = graph_diff_compute_edge_labels(g, h);
   diff.diameter = _calculate_ratio(g_stats.diameter, h_stats.diameter);
   diff.radius = _calculate_ratio(g_stats.radius, h_stats.radius);
   diff.both_joint = g_stats.is_joint && h_stats.is_joint;
