@@ -132,5 +132,6 @@
 #include "bipartite_ml.ipp"        // Defines BipartiteML. Dependencies: "bipartite_ml.ipp", "ml_based_method.hpp".
 #include "ring_ml.ipp"             // Defines RingML. Dependencies: "ring_ml.ipp", "ml_based_method.hpp".
 
+#include "decision_tree.hpp"
 
 #endif /* SRC_METHODS_ALL_METHODS_HPP_ */
