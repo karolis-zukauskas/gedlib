@@ -230,7 +230,7 @@ std::vector<ged::GEDGraph::GraphID> setup_environment(const std::string & datase
   return graph_ids;
 }
 
-void setup_rand_environment(ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel> & env) {
+void setup_generated_environment(ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel> & env) {
   // Costs: [node_ins_cost, node_del_cost, node_rel_cost, edge_ins_cost, edge_del_cost, edge_rel_cost]
   std::vector<double> edit_costs { 2.5, 2.5, 5, 1.0, 1.0, 2.0 };
 
@@ -256,7 +256,7 @@ std::string create_stats_file(std::string const& base_name) {
   std::string filename = ss.str();
   std::ofstream stats_file(filename.c_str(), std::ios_base::trunc);
 
-  stats_file << "method, ub, runtime, dataset, g_id, h_id, node_count, edge_count, avg_node_degree, edge_density, diameter, radius, both_joint" << std::endl;
+  stats_file << "method, ub, runtime, dataset, g_id, h_id, node_count, edge_count, avg_node_degree, edge_density, node_label_count, edge_label_count, diameter, radius, both_joint" << std::endl;
   stats_file.close();
 
   return filename;

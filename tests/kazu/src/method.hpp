@@ -126,6 +126,8 @@ public:
       avg_ls_iterations_time = 0;
       avg_num_ls_iterations = 0;
 
+      return;
+
       auto run_ged = [&](GEDGraph::GraphID g_id, GEDGraph::GraphID h_id) -> void {
         GEDGraph::GraphID _g_id = g_id;
         GEDGraph::GraphID _h_id = h_id;
@@ -212,6 +214,8 @@ void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> 
                    << diff.edge_count << ","
                    << diff.avg_node_degree << ","
                    << diff.edge_density << ","
+                   << diff.node_label_count << ","
+                   << diff.edge_label_count << ","
                    << diff.diameter << ","
                    << diff.radius << ","
                    << (diff.both_joint ? "joint" : "disjoint") << "\n";

@@ -51,7 +51,7 @@ void test_lsape_rand(std::vector<Method> const& methods, size_t num_graphs, size
   for (size_t graph_size : graph_sizes) {
     for (double edge_density : edge_densities) {
       std::stringstream ss;
-      ss << "random, nodes: " << graph_size << " edge density: " << edge_density;
+      ss << "random n: " << graph_size << " ed: " << edge_density;
       std::string dataset = ss.str();
 
       try {
@@ -66,7 +66,7 @@ void test_lsape_rand(std::vector<Method> const& methods, size_t num_graphs, size
             graph_gen_random(env, graph_gen_rng, num_nodes, edge_density, node_labels, edge_labels);
           }
 
-          ::util::setup_rand_environment(env);
+          ::util::setup_generated_environment(env);
         };
 
         run_on_generated_dataset(methods, generate_graphs, dataset, edge_density, false, TEST_ONLY_UNIQUE_PAIRS, results_filename, stats_filename);

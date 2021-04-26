@@ -53,9 +53,11 @@ int main(int argc, char* argv[]) {
     Method (Options::GEDMethod::IPFP, "BRANCH", true),
     Method (Options::GEDMethod::IPFP, "NODE", true),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BRANCH_FAST"),
+    Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method NODE"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
     Method (Options::GEDMethod::IPFP, "STAR", true),
@@ -64,7 +66,18 @@ int main(int argc, char* argv[]) {
     Method (Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
-  test_ls_all_datasets(methods, all_datasets);
+  //test_ls_all_datasets(methods, all_datasets);
+  {
+    size_t const num_graphs = 100;
+    size_t const node_variance = 5;
+    std::vector<size_t> const graph_sizes {
+      10, 20, 30, 40
+    };
+    std::vector<size_t> const edges_per_node {
+      2, 3, 4, 5,
+    };
+    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
+  }
 
   // test_ls_graph_sizes();
   // test_ls_rand_graphs();
