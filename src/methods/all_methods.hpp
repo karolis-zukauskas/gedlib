@@ -31,6 +31,7 @@
 // Declarations of abstract classes.
 
 #include "ged_method.hpp"          // Declares GEDMethod.
+#include "decision_tree.hpp"
 #ifdef GUROBI
 #include "mip_based_method.hpp"    // Declares MIPBasedMethod. Dependencies: "ged_method.hpp".
 #endif
@@ -79,6 +80,8 @@
 
 #include "bipartite_ml.hpp"        // Declares BipartiteML. Dependencies: "ml_based_method.hpp".
 #include "ring_ml.hpp"             // Declares RingML. Dependencies: "ml_based_method.hpp".
+
+#include "decision_tree_rep.hpp"
 
 // Definitions of abstract classes.
 
@@ -131,7 +134,5 @@
 
 #include "bipartite_ml.ipp"        // Defines BipartiteML. Dependencies: "bipartite_ml.ipp", "ml_based_method.hpp".
 #include "ring_ml.ipp"             // Defines RingML. Dependencies: "ring_ml.ipp", "ml_based_method.hpp".
-
-#include "decision_tree.hpp"
 
 #endif /* SRC_METHODS_ALL_METHODS_HPP_ */

@@ -126,8 +126,6 @@ public:
       avg_ls_iterations_time = 0;
       avg_num_ls_iterations = 0;
 
-      return;
-
       auto run_ged = [&](GEDGraph::GraphID g_id, GEDGraph::GraphID h_id) -> void {
         GEDGraph::GraphID _g_id = g_id;
         GEDGraph::GraphID _h_id = h_id;

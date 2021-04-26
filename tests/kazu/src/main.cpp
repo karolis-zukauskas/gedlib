@@ -29,7 +29,7 @@
  */
 
 #define WRITE_STATS_FILE
-constexpr int TEST_THREADS = 8;
+constexpr int TEST_THREADS = 1;
 constexpr bool TEST_ONLY_UNIQUE_PAIRS = true;
 
 #include "util.hpp"
@@ -66,18 +66,28 @@ int main(int argc, char* argv[]) {
     Method (Options::GEDMethod::IPFP, "RANDOM", true),
   };
 
-  //test_ls_all_datasets(methods, all_datasets);
   {
-    size_t const num_graphs = 100;
-    size_t const node_variance = 5;
-    std::vector<size_t> const graph_sizes {
-      10, 20, 30, 40
+    std::vector<std::string> const all_datasets = {
+      "Letter_HIGH",
     };
-    std::vector<size_t> const edges_per_node {
-      2, 3, 4, 5,
+    std::vector<Method> const methods {
+      Method (Options::GEDMethod::IPFP, "REP_TREE", true),
     };
-    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
+
+    test_ls_all_datasets(methods, all_datasets);
   }
+
+  // {
+  //   size_t const num_graphs = 100;
+  //   size_t const node_variance = 5;
+  //   std::vector<size_t> const graph_sizes {
+  //     10, 20, 30, 40
+  //   };
+  //   std::vector<size_t> const edges_per_node {
+  //     2, 3, 4, 5,
+  //   };
+  //   test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
+  // }
 
   // test_ls_graph_sizes();
   // test_ls_rand_graphs();

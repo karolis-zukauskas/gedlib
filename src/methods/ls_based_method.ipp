@@ -34,8 +34,8 @@ template<class UserNodeLabel, class UserEdgeLabel>
 LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
 ~LSBasedMethod() {
 	delete initialization_method_;
-  if (ls_initialization_method_ != nullptr)
-    delete ls_initialization_method_;
+  delete ls_initialization_method_;
+  delete dt_initialization_method_;
 	delete lower_bound_method_;
 }
 
@@ -49,6 +49,7 @@ ls_iterations_time{0},
 num_threads_{1},
 initialization_method_{nullptr},
 ls_initialization_method_{nullptr},
+dt_initialization_method_{nullptr},
 initialization_options_(""),
 lower_bound_method_{nullptr},
 lower_bound_method_options_(""),
@@ -71,6 +72,8 @@ ged_init_() {
 		initialization_method_->init();
 	} else if (ls_initialization_method_) {
     ls_initialization_method_->init();
+  } else if (dt_initialization_method_) {
+    dt_initialization_method_->init();
   }
 	if (lower_bound_method_) {
 		lower_bound_method_->init();
@@ -234,6 +237,8 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     }
     else if (arg == "BP_BEAM") {
         ls_initialization_method_ = new BPBeam<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    } else if (arg == "REP_TREE") {
+        dt_initialization_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");
@@ -429,6 +434,8 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     initialization_method_->set_options(initialization_options_);
 	} else if (ls_initialization_method_) {
     ls_initialization_method_->set_options(initialization_options_);
+  } else if (dt_initialization_method_) {
+    dt_initialization_method_->set_options(initialization_options_);
   }
 	if (lower_bound_method_) {
 		lower_bound_method_->set_options(lower_bound_method_options_);
@@ -490,6 +497,10 @@ generate_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<
   else if (ls_initialization_method_) {
     generate_ls_based_initial_node_maps_(g, h, initial_node_maps, result);
   }
+  else if (dt_initialization_method_) {
+    generate_dt_based_initial_node_maps_(g, h, initial_node_maps, result);
+  }
+
   if (num_initial_solutions_ > initial_node_maps.size())
     generate_random_initial_node_maps_(g, h, initial_node_maps);
 }
@@ -512,6 +523,16 @@ generate_ls_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std
 	ls_initialization_method_->run_as_util(g, h, ls_result);
 	initial_node_maps = ls_result.node_maps();
 	result.set_lower_bound(ls_result.lower_bound());
+}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
+generate_dt_based_initial_node_maps_(const GEDGraph & g, const GEDGraph & h, std::vector<NodeMap> & initial_node_maps, Result & result) {
+	Result dt_result;
+	dt_initialization_method_->run_as_util(g, h, dt_result);
+	initial_node_maps = dt_result.node_maps();
+	result.set_lower_bound(dt_result.lower_bound());
 }
 
 template<class UserNodeLabel, class UserEdgeLabel>
