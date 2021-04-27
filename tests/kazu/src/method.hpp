@@ -174,7 +174,7 @@ public:
 };
 
 void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> const& setup_ged_env, std::string const& dataset,
-  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename, std::string const& stats_filename) {
+  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename) {
 
 #ifdef _OPENMP
     omp_set_num_threads(TEST_THREADS);
@@ -203,7 +203,7 @@ void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> 
 #pragma omp critical
     {
 #ifdef WRITE_STATS_FILE
-      std::ofstream stats_file(stats_filename.c_str(), std::ios_base::app);
+      std::ofstream stats_file(s_stats_filename.c_str(), std::ios_base::app);
       for (auto const& result : results) {
         GraphDiff diff = graph_diff_compute(env, stats, result.g_id, result.h_id);
 
@@ -231,7 +231,7 @@ void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> 
 }
 
 void run_on_sized_dataset(std::vector<Method> const& methods, std::string const& dataset, bool ensure_n_greater_m, bool test_only_unique_pairs,
-  std::string const& result_filename, std::string const& stats_filename) {
+  std::string const& result_filename) {
 
   std::cout << "\n=== " << dataset << " ===\n";
 
@@ -257,12 +257,12 @@ void run_on_sized_dataset(std::vector<Method> const& methods, std::string const&
       return env;
     };
 
-    run_methods(methods, setup_ged_env, dataset, 0.0, ensure_n_greater_m, test_only_unique_pairs, result_filename, stats_filename);
+    run_methods(methods, setup_ged_env, dataset, 0.0, ensure_n_greater_m, test_only_unique_pairs, result_filename);
   }
 }
 
 void run_on_test_dataset(std::vector<Method> const& methods, std::string const& dataset, bool ensure_n_greater_m, bool test_only_unique_pairs,
-  std::string const& result_filename, std::string const& stats_filename) {
+  std::string const& result_filename) {
 
   std::cout << "\n=== " << dataset << " ===\n";
 
@@ -273,11 +273,11 @@ void run_on_test_dataset(std::vector<Method> const& methods, std::string const& 
     return env;
   };
 
-  run_methods(methods, setup_ged_env, dataset, 0.0, ensure_n_greater_m, test_only_unique_pairs, result_filename, stats_filename);
+  run_methods(methods, setup_ged_env, dataset, 0.0, ensure_n_greater_m, test_only_unique_pairs, result_filename);
 }
 
 void run_on_generated_dataset(std::vector<Method> const& methods, std::function<void(GxlGEDEnv&)> const& generate_graphs, std::string const& dataset,
-  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename, std::string const& stats_filename) {
+  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename) {
 
   std::cout << "\n=== " << dataset << " ===\n";
 
@@ -288,7 +288,7 @@ void run_on_generated_dataset(std::vector<Method> const& methods, std::function<
     return env;
   };
 
-  run_methods(methods, setup_ged_env, dataset, edge_density, ensure_n_greater_m, test_only_unique_pairs, result_filename, stats_filename);
+  run_methods(methods, setup_ged_env, dataset, edge_density, ensure_n_greater_m, test_only_unique_pairs, result_filename);
 }
 
 #endif

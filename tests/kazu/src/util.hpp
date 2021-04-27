@@ -44,6 +44,8 @@ using namespace ged;
 using GxlExchangeGraph = ged::ExchangeGraph<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 using GxlGEDEnv = ged::GEDEnv<ged::GXLNodeID, ged::GXLLabel, ged::GXLLabel>;
 
+static std::string s_stats_filename;
+
 namespace util {
 
 bool is_chemical_dataset(const std::string & dataset) {

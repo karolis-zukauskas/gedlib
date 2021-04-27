@@ -5,12 +5,11 @@
 #include "../method.hpp"
 
 void test_lsape_all(std::vector<Method> const& methods, std::vector<std::string> const& datasets) {
-  std::string stats_filename = ::util::create_stats_file("lsape_all_datasets");
   for (auto dataset : datasets) {
     try {
       std::string results_filename = ::util::create_result_file("lsape_all_datasets", dataset);
 
-      run_on_test_dataset(methods, dataset, false, TEST_ONLY_UNIQUE_PAIRS, results_filename, stats_filename);
+      run_on_test_dataset(methods, dataset, false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
     }
     catch (const std::exception & error) {
       std::cerr << error.what() << ". " << "Error on test_lsape_all: " << dataset << ".\n";
@@ -19,12 +18,11 @@ void test_lsape_all(std::vector<Method> const& methods, std::vector<std::string>
 }
 
 void test_lsape_sized(std::vector<Method> const& methods, std::vector<std::string> const& datasets) {
-  std::string stats_filename = ::util::create_stats_file("lsape_sized_datasets");
   for (auto dataset : datasets) {
     try {
       std::string results_filename = ::util::create_result_file("lsape_sized_datasets", dataset);
 
-      run_on_sized_dataset(methods, dataset, false, TEST_ONLY_UNIQUE_PAIRS, results_filename, stats_filename);
+      run_on_sized_dataset(methods, dataset, false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
     }
     catch (const std::exception & error) {
       std::cerr << error.what() << ". " << "Error on test_lsape_all: " << dataset << ".\n";
@@ -46,7 +44,6 @@ void test_lsape_rand(std::vector<Method> const& methods, size_t num_graphs, size
   std::vector<std::string> const node_labels { "A", "B", "C" };
   std::vector<std::string> const edge_labels { "0", "1" };
 
-  std::string stats_filename = ::util::create_stats_file("lsape_generated");
   std::string results_filename = ::util::create_result_file("lsape_generated", "rand");
   for (size_t graph_size : graph_sizes) {
     for (double edge_density : edge_densities) {
@@ -69,7 +66,7 @@ void test_lsape_rand(std::vector<Method> const& methods, size_t num_graphs, size
           ::util::setup_generated_environment(env);
         };
 
-        run_on_generated_dataset(methods, generate_graphs, dataset, edge_density, false, TEST_ONLY_UNIQUE_PAIRS, results_filename, stats_filename);
+        run_on_generated_dataset(methods, generate_graphs, dataset, edge_density, false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
       } catch (const std::exception & error) {
         std::cerr << error.what() << ". " << "Error on test_lsape_all: " << dataset << ".\n";
       }
