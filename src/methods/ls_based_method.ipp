@@ -41,8 +41,9 @@ LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
 
 template<class UserNodeLabel, class UserEdgeLabel>
 LSBasedMethod<UserNodeLabel, UserEdgeLabel>::
-LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env) :
 GEDMethod<UserNodeLabel, UserEdgeLabel>(ged_data),
+env_{env},
 num_ls_iterations{0},
 initial_sulutions_time{0},
 ls_iterations_time{0},
@@ -238,7 +239,7 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     else if (arg == "BP_BEAM") {
         ls_initialization_method_ = new BPBeam<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     } else if (arg == "REP_TREE") {
-        dt_initialization_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+        dt_initialization_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");

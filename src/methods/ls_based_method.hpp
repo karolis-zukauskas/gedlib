@@ -63,7 +63,7 @@ public:
 	 * @brief Constructor.
 	 * @param[in] ged_data The instance on which the method should be run.
 	 */
-	LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+	LSBasedMethod(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env = nullptr);
 
   std::size_t num_ls_iterations;
   Seconds initial_sulutions_time;
@@ -77,6 +77,7 @@ protected:
 	std::size_t num_threads_;
 
 private:
+  GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env_;
 
 	LSAPEBasedMethod<UserNodeLabel, UserEdgeLabel> * initialization_method_;
 

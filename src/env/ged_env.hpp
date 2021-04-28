@@ -238,6 +238,8 @@ public:
 	 */
 	UserNodeLabel get_node_label(LabelID label_id) const;
 
+  UserNodeLabel const& get_node_label_ref(LabelID label_id) const;
+
 	/*!
 	 * @brief Returns the number of edge labels.
 	 * @return Number of pairwise different edge labels contained in the environment.
@@ -251,6 +253,8 @@ public:
 	 * @return Edge label for selected label ID.
 	 */
 	UserEdgeLabel get_edge_label(LabelID label_id) const;
+
+  UserEdgeLabel const& get_edge_label_ref(LabelID label_id) const;
 
 	/*!
 	 * @brief Returns lower bound for edit distance between the input graphs.

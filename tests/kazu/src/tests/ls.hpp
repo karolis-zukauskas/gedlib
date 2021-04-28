@@ -132,7 +132,8 @@ void test_ls_cluster_graphs(std::vector<Method> const& methods, size_t num_graph
             double multiplier = static_cast<double>((static_cast<long>(size_variance_rng() % 2000)) - 1000) / 1000.0;
             size_t num_nodes = graph_size + static_cast<size_t>(std::round(multiplier * static_cast<double>(node_variance)));
 
-            graph_gen_cluster(env, graph_gen_rng, num_nodes, edges, node_labels, edge_labels);
+            // TODO: fix this
+            //graph_gen_cluster(env, graph_gen_rng, num_nodes, edges, node_labels, edge_labels);
           }
 
           ::util::setup_generated_environment(env);

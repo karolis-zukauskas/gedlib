@@ -36,8 +36,8 @@ IPFP<UserNodeLabel, UserEdgeLabel>::
 
 template<class UserNodeLabel, class UserEdgeLabel>
 IPFP<UserNodeLabel, UserEdgeLabel>::
-IPFP(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
-LSBasedMethod<UserNodeLabel, UserEdgeLabel>(ged_data),
+IPFP(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env) :
+LSBasedMethod<UserNodeLabel, UserEdgeLabel>(ged_data, env),
 quadratic_model_{QAPE},
 lsape_model_{LSAPESolver::ECBP},
 epsilon_{0.001},

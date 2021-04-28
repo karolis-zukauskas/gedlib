@@ -501,7 +501,7 @@ set_method(Options::GEDMethod method, const std::string & options) {
     ged_method_ = new Walks<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
   case Options::GEDMethod::IPFP:
-    ged_method_ = new IPFP<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    ged_method_ = new IPFP<UserNodeLabel, UserEdgeLabel>(ged_data_, this);
     break;
   case Options::GEDMethod::BIPARTITE:
     ged_method_ = new Bipartite<UserNodeLabel, UserEdgeLabel>(ged_data_);
@@ -547,6 +547,9 @@ set_method(Options::GEDMethod method, const std::string & options) {
     break;
   case Options::GEDMethod::STAR6:
     ged_method_ = new Star6<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::DT_REP:
+    ged_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(ged_data_, this);
     break;
 #ifdef GUROBI
   case Options::GEDMethod::F1:
@@ -637,6 +640,16 @@ get_node_label(LabelID label_id) const {
 }
 
 template<class UserNodeID, class UserNodeLabel, class UserEdgeLabel>
+UserNodeLabel const&
+GEDEnv<UserNodeID, UserNodeLabel, UserEdgeLabel>::
+get_node_label_ref(LabelID label_id) const {
+  if (label_id < 1 or label_id > num_node_labels()) {
+    throw Error("The environment does not contain a node label with ID " + std::to_string(label_id) + ".");
+  }
+  return ged_data_.node_labels_.at(label_id - 1);
+}
+
+template<class UserNodeID, class UserNodeLabel, class UserEdgeLabel>
 std::size_t
 GEDEnv<UserNodeID, UserNodeLabel, UserEdgeLabel>::
 num_edge_labels() const {
@@ -647,6 +660,16 @@ template<class UserNodeID, class UserNodeLabel, class UserEdgeLabel>
 UserEdgeLabel
 GEDEnv<UserNodeID, UserNodeLabel, UserEdgeLabel>::
 get_edge_label(LabelID label_id) const {
+  if (label_id < 1 or label_id > num_edge_labels()) {
+    throw Error("The environment does not contain an edge label with ID " + std::to_string(label_id) + ".");
+  }
+  return ged_data_.edge_labels_.at(label_id - 1);
+}
+
+template<class UserNodeID, class UserNodeLabel, class UserEdgeLabel>
+UserEdgeLabel const&
+GEDEnv<UserNodeID, UserNodeLabel, UserEdgeLabel>::
+get_edge_label_ref(LabelID label_id) const {
   if (label_id < 1 or label_id > num_edge_labels()) {
     throw Error("The environment does not contain an edge label with ID " + std::to_string(label_id) + ".");
   }

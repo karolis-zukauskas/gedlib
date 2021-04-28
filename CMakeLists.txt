@@ -23,6 +23,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(GEDLIB)
 set(VERSION 1.0)
+# set(CMAKE_CXX_STANDARD 14)
 
 # Determine build type.
 

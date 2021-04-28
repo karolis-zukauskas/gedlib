@@ -193,13 +193,14 @@ struct Options {
 		REFINE,              //!< Selects ged::Refine.
 		BP_BEAM,             //!< Selects ged::BPBeam.
 		SIMULATED_ANNEALING, //!< Selects ged::SimulatedAnnealing.
-		HED,				 //!< Selects ged::HED.
-		STAR,				 //!< Selects ged::Star.
-    STAR2,				 //!< Selects ged::Star.
-    STAR3,				 //!< Selects ged::Star.
-    STAR4,				 //!< Selects ged::Star.
-    STAR5,				 //!< Selects ged::Star.
-    STAR6				 //!< Selects ged::Star.
+		HED,                 //!< Selects ged::HED.
+		STAR,                //!< Selects ged::Star.
+    STAR2,               //!< Selects ged::Star2.
+    STAR3,               //!< Selects ged::Star3.
+    STAR4,               //!< Selects ged::Star4.
+    STAR5,               //!< Selects ged::Star5.
+    STAR6,               //!< Selects ged::Star6.
+    DT_REP               //!< Selects ged::DecisionTree_REPTree
 	};
 
 	/*!
@@ -369,6 +370,9 @@ std::ostream & operator<<(std::ostream & os, const Options::GEDMethod & ged_meth
 		break;
   case Options::GEDMethod::STAR6:
 		os << "STAR6";
+		break;
+  case Options::GEDMethod::DT_REP:
+		os << "DT_REP";
 		break;
 #ifdef GUROBI
 	case Options::GEDMethod::F1:

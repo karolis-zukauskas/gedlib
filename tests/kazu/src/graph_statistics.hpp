@@ -173,6 +173,25 @@ struct GraphDiff {
 };
 
 
+// constexpr double finger_tolerance = M_PI / 100.0;
+
+// struct LabelKey_Finger {
+//   double orientation;
+// };
+
+// bool operator< (ged::GXLLabel const& lhs, LabelKey_Finger const& rhs) {
+//   double const _lhs = std::stod(lhs.at("orient"));
+//   double const _rhs = rhs.orientation;
+
+//   return _lhs - _rhs < finger_tolerance;
+// }
+// bool operator< (LabelKey_Finger const& lhs, ged::GXLLabel const& rhs) {
+//   double const _lhs = lhs.orientation;
+//   double const _rhs = std::stod(rhs.at("orient"));
+
+//   return _lhs - _rhs < finger_tolerance;
+// }
+
 double graph_diff_compute_node_labels(GxlExchangeGraph const& g, GxlExchangeGraph const& h) {
   auto count_labels = [](GxlExchangeGraph const& g) -> std::map<ged::GXLLabel, size_t> {
     std::map<ged::GXLLabel, size_t> label_map;

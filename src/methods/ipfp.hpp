@@ -67,7 +67,7 @@ public:
 
 	virtual ~IPFP();
 
-	IPFP(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+	IPFP(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env = nullptr);
 
 private:
 
