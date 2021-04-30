@@ -240,6 +240,16 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
         ls_initialization_method_ = new BPBeam<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     } else if (arg == "REP_TREE") {
         dt_initialization_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "REP_TREE_2") {
+        dt_initialization_method_ = new DecisionTree_REPTree2<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "J48") {
+        dt_initialization_method_ = new DecisionTree_J48<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "J48_2") {
+        dt_initialization_method_ = new DecisionTree_J48_2<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "J48_3") {
+        dt_initialization_method_ = new DecisionTree_J48_3<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "J48_4") {
+        dt_initialization_method_ = new DecisionTree_J48_4<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");

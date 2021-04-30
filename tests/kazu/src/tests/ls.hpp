@@ -111,35 +111,34 @@ void test_ls_power_graphs(std::vector<Method> const& methods, size_t num_graphs,
 }
 
 void test_ls_cluster_graphs(std::vector<Method> const& methods, size_t num_graphs, size_t node_variance,
-  std::vector<size_t> const& graph_sizes, std::vector<size_t> const& edges_per_node) {
+  std::vector<size_t> const& graph_sizes, std::vector<size_t> const& num_clusters, double p_inner_edge, double p_outer_edge) {
 
   std::vector<std::string> const node_labels { "A", "B", "C" };
   std::vector<std::string> const edge_labels { "0", "1" };
 
   std::string results_filename = ::util::create_result_file("ls_generated", "cluster");
   for (size_t graph_size : graph_sizes) {
-    for (size_t edges : edges_per_node) {
+    for (size_t clusters : num_clusters) {
       std::stringstream ss;
-      ss << "power n: " << graph_size << " epn: " << edges;
+      ss << "cluster n: " << graph_size << " c: " << clusters;
       std::string dataset = ss.str();
 
       try {
-        auto generate_graphs = [num_graphs, graph_size, edges, &node_labels, &edge_labels, node_variance](GxlGEDEnv& env) -> void {
-          std::mt19937 size_variance_rng(graph_size * edges);          // For graph_size variance
-          std::mt19937 graph_gen_rng(graph_size * edges);              // For generating graphs
+        auto generate_graphs = [num_graphs, graph_size, clusters, &node_labels, &edge_labels, node_variance, p_inner_edge, p_outer_edge](GxlGEDEnv& env) -> void {
+          std::mt19937 size_variance_rng(graph_size * clusters);          // For graph_size variance
+          std::mt19937 graph_gen_rng(graph_size * clusters);              // For generating graphs
 
           for (size_t i = 0; i < num_graphs; ++i) {
             double multiplier = static_cast<double>((static_cast<long>(size_variance_rng() % 2000)) - 1000) / 1000.0;
             size_t num_nodes = graph_size + static_cast<size_t>(std::round(multiplier * static_cast<double>(node_variance)));
 
-            // TODO: fix this
-            //graph_gen_cluster(env, graph_gen_rng, num_nodes, edges, node_labels, edge_labels);
+            graph_gen_cluster(env, graph_gen_rng, num_nodes, clusters, p_inner_edge, p_outer_edge, node_labels, edge_labels);
           }
 
           ::util::setup_generated_environment(env);
         };
 
-        run_on_generated_dataset(methods, generate_graphs, dataset, static_cast<double>(edges), false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
+        run_on_generated_dataset(methods, generate_graphs, dataset, static_cast<double>(0.0), false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
       } catch (const std::exception & error) {
         std::cerr << error.what() << ". " << "Error on test_ls_power_graphs: " << dataset << ".\n";
       }

@@ -23,7 +23,7 @@ template<class UserNodeLabel, class UserEdgeLabel>
 class DecisionTreeMethod : public GEDMethod<UserNodeLabel, UserEdgeLabel> {
 public:
   using GEDMethodPtr = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>;
-  using GEDMethodMap = std::map<Options::GEDMethod, GEDMethodPtr>;
+  using GEDMethodMap = std::map<size_t, GEDMethodPtr>;
 
 public:
   DecisionTreeMethod(GEDData<UserNodeLabel, UserEdgeLabel> const& ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* pEnv);
@@ -31,7 +31,7 @@ public:
   FastGraphDiff compute_graph_diff(GEDGraph const& g, GEDGraph const& h);
 
 private:
-  virtual Options::GEDMethod pick_method(GEDGraph const& g, GEDGraph const& h) = 0;
+  virtual size_t pick_method(GEDGraph const& g, GEDGraph const& h) = 0;
 
   // Member functions inherited from GEDMethod.
   virtual void ged_init_() final;
@@ -69,7 +69,7 @@ template<class UserNodeLabel, class UserEdgeLabel>
 void
 DecisionTreeMethod<UserNodeLabel, UserEdgeLabel>::
 ged_run_(const GEDGraph & g, const GEDGraph & h, Result & result) {
-  Options::GEDMethod method_index = this->pick_method(g, h);
+  size_t method_index = this->pick_method(g, h);
   assert(m_methods.find(method_index) != m_methods.end() && "Method is not initialized");
 
   m_methods[method_index]->run_as_util(g, h, result);

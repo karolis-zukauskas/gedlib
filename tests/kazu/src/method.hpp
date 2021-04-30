@@ -98,6 +98,8 @@ public:
         name << "WALKS";
       } else if (ged_method_ == Options::GEDMethod::NODE) {
         name << "NODE";
+      } else {
+        assert(false);
       }
 
       return name.str();
@@ -221,10 +223,13 @@ void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> 
       stats_file.close();
 #endif
 
+      // lb, ub, runtime, init_solutions_t, ls_iterations_t, ls_iterations, num_nodes, method
       std::ofstream result_file(result_filename.c_str(), std::ios_base::app);
-      result_file << methods[i].name() << "," << env.get_avg_num_nodes() << "," << edge_density << ",";
-      result_file << avg_lb << "," << avg_ub << "," << avg_runtime << "," << avg_num_ls_iterations << ",";
-      result_file << avg_init_time << "," << avg_ls_iterations_time << "\n";
+
+      result_file << avg_lb << "," << avg_ub << "," << avg_runtime << "," << avg_init_time << ",";
+      result_file << avg_ls_iterations_time << "," << avg_num_ls_iterations << ",";
+      result_file << env.get_avg_num_nodes() << "," << methods[i].name() << std::endl;
+
       result_file.close();
     }
   }

@@ -150,7 +150,7 @@ GEDGraph::GraphID graph_gen_cluster(GxlGEDEnv& env, std::mt19937& rng, size_t nu
 
   assert(num_nodes > 1);
   assert(num_clusters > 0);
-  assert(num_nodes % num_clusters == 0);
+  //assert(num_nodes % num_clusters == 0);
 
   constexpr char const* NODE_LABEL_KEY = "label";
   constexpr char const* EDGE_LABEL_KEY = "label";

@@ -82,6 +82,7 @@
 #include "ring_ml.hpp"             // Declares RingML. Dependencies: "ml_based_method.hpp".
 
 #include "decision_tree_rep.hpp"
+#include "decision_tree_j48.hpp"
 
 // Definitions of abstract classes.
 

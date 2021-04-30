@@ -274,7 +274,7 @@ std::string create_result_file(std::string const& base_name, std::string const& 
   std::string filename = ss.str();
   std::ofstream result_file(filename.c_str(), std::ios_base::trunc);
 
-  result_file << "method, num_nodes, edge_density, lb, ub, runtime, ls_iterations, init_solutions_t, ls_iterations_t" << std::endl;
+  result_file << "lb, ub, runtime, init_solutions_t, ls_iterations_t, ls_iterations, num_nodes, method" << std::endl;
   result_file.close();
 
   return filename;

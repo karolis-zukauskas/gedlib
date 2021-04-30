@@ -28,9 +28,9 @@
  *   VLDB J. 2019
  */
 
-#define WRITE_STATS_FILE
-constexpr int TEST_THREADS = 4;
-constexpr bool TEST_ONLY_UNIQUE_PAIRS = true;
+//#define WRITE_STATS_FILE
+constexpr int TEST_THREADS = 2;
+constexpr bool TEST_ONLY_UNIQUE_PAIRS = false;
 
 #include "util.hpp"
 #include "graph_gen.hpp"
@@ -60,14 +60,31 @@ int main(int argc, char* argv[]) {
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method NODE"),
+    Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method STAR"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
+    Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method STAR"),
     Method (Options::GEDMethod::IPFP, "STAR", true),
     Method (Options::GEDMethod::IPFP, "STAR4", true),
     Method (Options::GEDMethod::IPFP, "STAR6", true),
   };
+
+  // compute_statistics();
+
+  // {
+  //   GxlGEDEnv env;
+  //   std::mt19937 rng;
+  //   std::vector<std::string> const node_labels { "A", "B", "C" };
+  //   std::vector<std::string> const edge_labels { "0", "1" };
+
+  //   auto id1 = graph_gen_cluster(env, rng, 19, 4, 1.0, 0.00, node_labels, edge_labels);
+  //   env.save_as_gxl_graph(id1, "../results/_test_graph1.gxl");
+
+  //   auto id2 = graph_gen_cluster(env, rng, 43, 4, 0.8, 0.00, node_labels, edge_labels);
+  //   env.save_as_gxl_graph(id2, "../results/_test_graph2.gxl");
+  // }
 
   {
     // GxlGEDEnv env;
@@ -94,28 +111,80 @@ int main(int argc, char* argv[]) {
 
   {
     std::vector<std::string> const all_datasets = {
-      "Fingerprint",
+      "Mutagenicity", "AIDS"
     };
     std::vector<Method> const methods {
-      Method (Options::GEDMethod::IPFP, "REP_TREE", true),
+      Method (Options::GEDMethod::IPFP, "J48_4", true),
+      Method (Options::GEDMethod::IPFP, "REP_TREE_2", true),
     };
 
     test_ls_all_datasets(methods, all_datasets);
+    return 0;
   }
 
-  // {
-  //   size_t const num_graphs = 100;
-  //   size_t const node_variance = 5;
-  //   std::vector<size_t> const graph_sizes {
-  //     // 10, 20, 30, 40
-  //     10, 20, 30,
-  //   };
-  //   std::vector<size_t> const edges_per_node {
-  //     // 2, 3, 4, 5,
-  //     2, 3, 4,
-  //   };
-  //   test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
-  // }
+  // ================================================================
+  // GENERATED - CLUSTER
+  // ================================================================
+
+  double p_inner_edge = 0.75;
+  double p_outer_edge = 0.02;
+  {
+    size_t const num_graphs = 50;
+    size_t const node_variance = 5;
+    std::vector<size_t> const graph_sizes {
+      20, 30,
+    };
+    std::vector<size_t> const cluster_count {
+      3, 5,
+    };
+    test_ls_cluster_graphs(methods, num_graphs, node_variance, graph_sizes, cluster_count, p_inner_edge, p_outer_edge);
+  }
+
+  {
+    size_t const num_graphs = 50;
+    size_t const node_variance = 20;
+    std::vector<size_t> const graph_sizes {
+      30,
+    };
+    std::vector<size_t> const cluster_count {
+      5
+    };
+    test_ls_cluster_graphs(methods, num_graphs, node_variance, graph_sizes, cluster_count, p_inner_edge, p_outer_edge);
+  }
+
+  // ================================================================
+  // GENERATED - POWER
+  // ================================================================
+
+  {
+    size_t const num_graphs = 50;
+    size_t const node_variance = 5;
+    std::vector<size_t> const graph_sizes {
+      // 10, 20, 30, 40
+      10, 30,
+    };
+    std::vector<size_t> const edges_per_node {
+      // 2, 3, 4, 5,
+      2, 3,
+    };
+    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
+  }
+
+  // ================================================================
+  // GENERATED - RANDOM
+  // ================================================================
+
+  {
+    size_t const num_graphs = 50;
+    size_t const node_variance = 5;
+    std::vector<size_t> const graph_sizes {
+      10, 30,
+    };
+    std::vector<double> const edge_densities {
+      0.1, 0.2,
+    };
+    test_ls_rand_graphs(methods, num_graphs, node_variance, graph_sizes, edge_densities);
+  }
 
   // test_ls_graph_sizes();
   // test_ls_rand_graphs();
