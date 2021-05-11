@@ -163,6 +163,30 @@ public:
   virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & lsape_instance);
 };
 
+/**
+ * Modifications:
+ * Insertion and deletion cost functions are taken from NODE.
+ */
+template<class UserNodeLabel, class UserEdgeLabel>
+class Star7 : public Star<UserNodeLabel, UserEdgeLabel> {
+public:
+  Star7(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+
+  virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & lsape_instance);
+};
+
+/**
+ * Modifications:
+ * Substitution cost function is taken from NODE.
+ */
+template<class UserNodeLabel, class UserEdgeLabel>
+class Star8 : public Star<UserNodeLabel, UserEdgeLabel> {
+public:
+  Star8(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+
+  virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & lsape_instance);
+};
+
 }
 
 #endif /* SRC_METHODS_STAR_HPP_ */

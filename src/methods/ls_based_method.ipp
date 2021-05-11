@@ -197,6 +197,12 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     else if (arg == "BRANCH_UNIFORM2") {
 			initialization_method_ = new BranchUniform2<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
 		}
+    else if (arg == "BRANCH_UNIFORM3") {
+			initialization_method_ = new BranchUniform3<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+		}
+    else if (arg == "BRANCH_UNIFORM4") {
+			initialization_method_ = new BranchUniform4<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+		}
 		else if (arg == "BRANCH") {
 			initialization_method_ = new Branch<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
 		}
@@ -233,6 +239,12 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
     else if (arg == "STAR6") {
       initialization_method_ = new Star6<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     }
+    else if (arg == "STAR7") {
+      initialization_method_ = new Star7<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    }
+    else if (arg == "STAR8") {
+      initialization_method_ = new Star8<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
+    }
     else if (arg == "REFINE") {
         ls_initialization_method_ = new Refine<UserNodeLabel, UserEdgeLabel>(this->ged_data_);
     }
@@ -242,6 +254,8 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
         dt_initialization_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     } else if (arg == "REP_TREE_2") {
         dt_initialization_method_ = new DecisionTree_REPTree2<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "REP_TREE_3") {
+        dt_initialization_method_ = new DecisionTree_REPTree3<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     } else if (arg == "J48") {
         dt_initialization_method_ = new DecisionTree_J48<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     } else if (arg == "J48_2") {
@@ -250,6 +264,8 @@ ged_parse_option_(const std::string & option, const std::string & arg) {
         dt_initialization_method_ = new DecisionTree_J48_3<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     } else if (arg == "J48_4") {
         dt_initialization_method_ = new DecisionTree_J48_4<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
+    } else if (arg == "J48_5") {
+        dt_initialization_method_ = new DecisionTree_J48_5<UserNodeLabel, UserEdgeLabel>(this->ged_data_, this->env_);
     }
 		else if (arg != "RANDOM") {
 			throw Error(std::string("Invalid argument \"") + arg  + "\" for option initialization-method. Usage: options = \"[--initialization-method BIPARTITE_ML|BIPARTITE|BRANCH_FAST|BRANCH_UNIFORM|BRANCH|NODE|RING_ML|RING|SUBGRAPH|WALKS|RANDOM] [...]\"");

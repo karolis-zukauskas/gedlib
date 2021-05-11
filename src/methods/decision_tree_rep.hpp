@@ -104,6 +104,49 @@ private:
   }
 };
 
+
+template<class UserNodeLabel, class UserEdgeLabel>
+class DecisionTree_REPTree3 : public DecisionTreeMethod<UserNodeLabel, UserEdgeLabel> {
+private:
+  enum {
+    BRANCH_FAST = 0,
+    STAR6 = 1,
+  };
+
+public:
+  DecisionTree_REPTree3(GEDData<UserNodeLabel, UserEdgeLabel> const& ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env)
+    : DecisionTreeMethod<UserNodeLabel, UserEdgeLabel>(ged_data, env) {
+
+    this->m_methods[STAR6] = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>(new Star6<UserNodeLabel, UserEdgeLabel>(ged_data));
+    this->m_methods[BRANCH_FAST] = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>(new BranchFast<UserNodeLabel, UserEdgeLabel>(ged_data));
+  }
+
+private:
+  virtual size_t pick_method(GEDGraph const& g, GEDGraph const& h) {
+    // Created from both real world and generated graph data, ran on "best" 5 methods
+
+    //  node_label_count < 0.02 : IPFP (BRANCH_FAST) (2951/2202) [1477/1128]
+    //  node_label_count >= 0.02
+    // |    edge_label_count < 0.15 : IPFP (BRANCH_FAST) (2862/1611) [1443/809]
+    // |    edge_label_count >= 0.15 : IPFP (STAR6) (6833/4194) [3404/2098]
+
+    FastGraphDiff diff = this->compute_graph_diff(g, h);
+    if (diff.node_label_count < 0.02) {
+      return BRANCH_FAST;
+    } else {
+      if (diff.edge_label_count < 0.15) {
+        return BRANCH_FAST;
+      } else {
+        return STAR6;
+      }
+    }
+
+    assert(false);
+  }
+};
+
+
+
 }
 
 #endif

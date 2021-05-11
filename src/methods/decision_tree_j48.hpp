@@ -142,7 +142,7 @@ private:
       if (diff.edge_count <= 0.5) {
         return STAR;
       } else {
-        return STAR;
+        return NODE;
       }
     }
 
@@ -197,6 +197,57 @@ private:
         } else {
           return STAR6;
         }
+      }
+    }
+
+    assert(false);
+  }
+};
+
+
+template<class UserNodeLabel, class UserEdgeLabel>
+class DecisionTree_J48_5 : public DecisionTreeMethod<UserNodeLabel, UserEdgeLabel> {
+private:
+  enum {
+    REFINE_BIPARTITE = 0,
+    BRANCH_FAST = 1,
+    STAR6 = 2,
+  };
+
+public:
+  DecisionTree_J48_5(GEDData<UserNodeLabel, UserEdgeLabel> const& ged_data, GEDEnv<GXLNodeID, UserNodeLabel, UserEdgeLabel>* env)
+    : DecisionTreeMethod<UserNodeLabel, UserEdgeLabel>(ged_data, env) {
+
+    this->m_methods[BRANCH_FAST] = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>(new BranchFast<UserNodeLabel, UserEdgeLabel>(ged_data));
+    this->m_methods[STAR6] = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>(new Star6<UserNodeLabel, UserEdgeLabel>(ged_data));
+    this->m_methods[REFINE_BIPARTITE] = std::unique_ptr<GEDMethod<UserNodeLabel, UserEdgeLabel>>(new Refine<UserNodeLabel, UserEdgeLabel>(ged_data));
+
+    this->m_methods[REFINE_BIPARTITE]->set_options("--threads 1 --initialization-method BIPARTITE");
+  }
+
+private:
+  virtual size_t pick_method(GEDGraph const& g, GEDGraph const& h) {
+    // Created from both real world and generated graph data, ran on "best" 5 methods
+
+    //  node_label_count <= 0.05
+    // |    node_count <= 0.62069: IPFP (REFINE) ( --ls-initialization-method BIPARTITE) (2083.0/1518.0)
+    // |    node_count > 0.62069: IPFP (BRANCH_FAST) (2376.0/1814.0)
+    //  node_label_count > 0.05
+    // |    edge_label_count <= 0.144737: IPFP (BRANCH_FAST) (4295.0/2413.0)
+    // |    edge_label_count > 0.144737: IPFP (STAR6) (10216.0/6272.0)
+
+    FastGraphDiff diff = this->compute_graph_diff(g, h);
+    if (diff.node_label_count <= 0.05) {
+      if (diff.node_count <= 0.62069) {
+        return REFINE_BIPARTITE;
+      } else {
+        return BRANCH_FAST;
+      }
+    } else {
+      if (diff.node_label_count <= 0.144737) {
+        return BRANCH_FAST;
+      } else {
+        return STAR6;
       }
     }
 

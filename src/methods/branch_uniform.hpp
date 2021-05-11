@@ -110,6 +110,36 @@ private:
   virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem);
 };
 
+
+/**
+ * Modifications:
+ * Insertion and deletion cost functions are taken from NODE.
+ */
+template<class UserNodeLabel, class UserEdgeLabel>
+class BranchUniform3 : public BranchUniform<UserNodeLabel, UserEdgeLabel> {
+public:
+  BranchUniform3(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+
+private:
+  virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem);
+};
+
+
+
+/**
+ * Modifications:
+ * Substitution cost function is taken from NODE.
+ */
+template<class UserNodeLabel, class UserEdgeLabel>
+class BranchUniform4 : public BranchUniform<UserNodeLabel, UserEdgeLabel> {
+public:
+  BranchUniform4(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data);
+
+private:
+  virtual void lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem);
+};
+
+
 }
 
 #endif /* SRC_METHODS_BRANCH_UNIFORM_HPP_ */

@@ -476,6 +476,77 @@ lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & maste
 }
 
 
+// ============================
+// STAR 7
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star7<UserNodeLabel, UserEdgeLabel>::
+Star7(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star7<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_g = this->sorted_node_labels_.at(g.id());
+	const typename Star<UserNodeLabel, UserEdgeLabel>::SortedNodeLabels_ & sorted_node_labels_h = this->sorted_node_labels_.at(h.id());
+
+	double min_edit_cost{this->ged_data_.min_edit_cost(g, h)};
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+				master_problem(row_in_master, col_in_master) = this->compute_substitution_cost_(g, h, row_in_master, col_in_master, sorted_node_labels_g, sorted_node_labels_h) * min_edit_cost;
+			}
+			else if (row_in_master < g.num_nodes()) {
+				master_problem(row_in_master, h.num_nodes()) = this->ged_data_.node_cost(g.get_node_label(row_in_master), dummy_label());
+			}
+			else if (col_in_master < h.num_nodes()) {
+				master_problem(g.num_nodes(), col_in_master) = this->ged_data_.node_cost(dummy_label(), h.get_node_label(col_in_master));
+			}
+		}
+	}
+}
+
+// ============================
+// STAR 8
+// ============================
+
+template<class UserNodeLabel, class UserEdgeLabel>
+Star8<UserNodeLabel, UserEdgeLabel>::
+Star8(const GEDData<UserNodeLabel, UserEdgeLabel> & ged_data) :
+Star<UserNodeLabel, UserEdgeLabel>(ged_data) {}
+
+template<class UserNodeLabel, class UserEdgeLabel>
+void
+Star8<UserNodeLabel, UserEdgeLabel>::
+lsape_populate_instance_(const GEDGraph & g, const GEDGraph & h, DMatrix & master_problem) {
+	double min_edit_cost{this->ged_data_.min_edit_cost(g, h)};
+
+#ifdef _OPENMP
+	omp_set_num_threads(this->num_threads_ - 1);
+#pragma omp parallel for if(this->num_threads_ > 1)
+#endif
+	for (std::size_t row_in_master = 0; row_in_master < master_problem.num_rows(); row_in_master++) {
+		for (std::size_t col_in_master = 0; col_in_master < master_problem.num_cols(); col_in_master++) {
+			if ((row_in_master < g.num_nodes()) and (col_in_master < h.num_nodes())) {
+        master_problem(row_in_master, col_in_master) = this->ged_data_.node_cost(g.get_node_label(row_in_master), h.get_node_label(col_in_master));
+			}
+			else if (row_in_master < g.num_nodes()) {
+				master_problem(row_in_master, h.num_nodes()) = this->compute_deletion_cost_(g, row_in_master) * min_edit_cost;
+			}
+			else if (col_in_master < h.num_nodes()) {
+				master_problem(g.num_nodes(), col_in_master) = this->compute_insertion_cost_(h, col_in_master) * min_edit_cost;
+			}
+		}
+	}
+}
+
 }
 
 #endif /* SRC_METHODS_STAR_IPP_ */
