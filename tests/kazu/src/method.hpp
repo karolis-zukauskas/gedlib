@@ -80,6 +80,10 @@ public:
         name << "BRANCH_UNIFORM";
       } else if (ged_method_ == Options::GEDMethod::BRANCH_UNIFORM2) {
         name << "BRANCH_UNIFORM2";
+      } else if (ged_method_ == Options::GEDMethod::BRANCH_UNIFORM3) {
+        name << "BRANCH_UNIFORM3";
+      } else if (ged_method_ == Options::GEDMethod::BRANCH_UNIFORM4) {
+        name << "BRANCH_UNIFORM4";
       } else if (ged_method_ == Options::GEDMethod::STAR) {
         name << "STAR";
       } else if (ged_method_ == Options::GEDMethod::STAR2) {
@@ -92,13 +96,18 @@ public:
         name << "STAR5";
       } else if (ged_method_ == Options::GEDMethod::STAR6) {
         name << "STAR6";
+      } else if (ged_method_ == Options::GEDMethod::STAR7) {
+        name << "STAR7";
+      } else if (ged_method_ == Options::GEDMethod::STAR8) {
+        name << "STAR8";
       } else if (ged_method_ == Options::GEDMethod::SUBGRAPH) {
         name << "SUBGRAPH";
       } else if (ged_method_ == Options::GEDMethod::WALKS) {
         name << "WALKS";
       } else if (ged_method_ == Options::GEDMethod::NODE) {
         name << "NODE";
-      } else {
+      }
+      else {
         assert(false);
       }
 
@@ -176,7 +185,8 @@ public:
 };
 
 void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> const& setup_ged_env, std::string const& dataset,
-  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename) {
+  double edge_density, bool ensure_n_greater_m, bool test_only_unique_pairs, std::string const& result_filename,
+  std::map<std::string, std::vector<double>>* pMethodUbMap = nullptr) {
 
 #ifdef _OPENMP
     omp_set_num_threads(TEST_THREADS);
@@ -204,6 +214,12 @@ void run_methods(std::vector<Method> const& methods, std::function<GxlGEDEnv()> 
 
 #pragma omp critical
     {
+    if (pMethodUbMap != nullptr) {
+      std::string methodName = methods[i].name();
+      assert(pMethodUbMap->find(methodName) != pMethodUbMap->end());
+      pMethodUbMap->at(methodName).push_back(avg_ub);
+    }
+
 #ifdef WRITE_STATS_FILE
       std::ofstream stats_file(s_stats_filename.c_str(), std::ios_base::app);
       for (auto const& result : results) {

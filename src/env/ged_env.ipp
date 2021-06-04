@@ -482,6 +482,12 @@ set_method(Options::GEDMethod method, const std::string & options) {
   case Options::GEDMethod::BRANCH_UNIFORM2:
     ged_method_ = new BranchUniform2<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
+  case Options::GEDMethod::BRANCH_UNIFORM3:
+    ged_method_ = new BranchUniform3<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::BRANCH_UNIFORM4:
+    ged_method_ = new BranchUniform4<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
   case Options::GEDMethod::BRANCH_COMPACT:
     ged_method_ = new BranchCompact<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
@@ -547,6 +553,12 @@ set_method(Options::GEDMethod method, const std::string & options) {
     break;
   case Options::GEDMethod::STAR6:
     ged_method_ = new Star6<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR7:
+    ged_method_ = new Star7<UserNodeLabel, UserEdgeLabel>(ged_data_);
+    break;
+  case Options::GEDMethod::STAR8:
+    ged_method_ = new Star8<UserNodeLabel, UserEdgeLabel>(ged_data_);
     break;
   case Options::GEDMethod::DT_REP:
     ged_method_ = new DecisionTree_REPTree<UserNodeLabel, UserEdgeLabel>(ged_data_, this);

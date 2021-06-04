@@ -178,6 +178,8 @@ struct Options {
 		BRANCH_TIGHT,        //!< Selects ged::BranchTight.
 		BRANCH_UNIFORM,      //!< Selects ged::BranchUniform.
     BRANCH_UNIFORM2,      //!< Selects ged::BranchUniform.
+    BRANCH_UNIFORM3,      //!< Selects ged::BranchUniform.
+    BRANCH_UNIFORM4,      //!< Selects ged::BranchUniform.
 		BRANCH_COMPACT,      //!< Selects ged::BranchCompact.
 		PARTITION,           //!< Selects ged::Partition.
 		HYBRID,              //!< Selects ged::Hybrid.
@@ -200,6 +202,8 @@ struct Options {
     STAR4,               //!< Selects ged::Star4.
     STAR5,               //!< Selects ged::Star5.
     STAR6,               //!< Selects ged::Star6.
+    STAR7,               //!< Selects ged::Star6.
+    STAR8,               //!< Selects ged::Star6.
     DT_REP               //!< Selects ged::DecisionTree_REPTree
 	};
 
@@ -305,6 +309,12 @@ std::ostream & operator<<(std::ostream & os, const Options::GEDMethod & ged_meth
 	case Options::GEDMethod::BRANCH_UNIFORM2:
 		os << "BRANCH_UNIFORM2";
 		break;
+  case Options::GEDMethod::BRANCH_UNIFORM3:
+		os << "BRANCH_UNIFORM3";
+		break;
+  case Options::GEDMethod::BRANCH_UNIFORM4:
+		os << "BRANCH_UNIFORM4";
+		break;
 	case Options::GEDMethod::BRANCH_COMPACT:
 		os << "BRANCH_COMPACT";
 		break;
@@ -370,6 +380,12 @@ std::ostream & operator<<(std::ostream & os, const Options::GEDMethod & ged_meth
 		break;
   case Options::GEDMethod::STAR6:
 		os << "STAR6";
+		break;
+  case Options::GEDMethod::STAR7:
+		os << "STAR7";
+		break;
+  case Options::GEDMethod::STAR8:
+		os << "STAR8";
 		break;
   case Options::GEDMethod::DT_REP:
 		os << "DT_REP";

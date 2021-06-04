@@ -19,17 +19,8 @@
  *                                                                          *
  ***************************************************************************/
 
-/*!
- * @file tests/vldbj2019/src/test_best_methods.cpp
- * @brief Runs tests for VLDB J. submission.
- * @details The binary built from this file was used for the experiments in the following paper:
- * - D. B. Blumenthal, N. Boria, J. Gamper, S. Bougleux L. Brun:
- *   &ldquo;Comparing heuristics for graph edit distance computation&rdquo;,
- *   VLDB J. 2019
- */
-
-//#define WRITE_STATS_FILE
-constexpr int TEST_THREADS = 2;
+// #define WRITE_STATS_FILE
+constexpr int TEST_THREADS = 8;
 constexpr bool TEST_ONLY_UNIQUE_PAIRS = false;
 
 #include "util.hpp"
@@ -52,143 +43,100 @@ int main(int argc, char* argv[]) {
   };
 
   std::vector<Method> const methods {
+    Method (Options::GEDMethod::IPFP, "RANDOM", true),
+
     Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM", true),
     Method (Options::GEDMethod::IPFP, "BRANCH_FAST", true),
     Method (Options::GEDMethod::IPFP, "BRANCH", true),
     Method (Options::GEDMethod::IPFP, "NODE", true),
+    Method (Options::GEDMethod::IPFP, "STAR", true),
+
+    // NOTE: These two require training ... see Method options
+    Method (Options::GEDMethod::IPFP, "WALKS", true),
+    Method (Options::GEDMethod::IPFP, "SUBGRAPH", true),
+
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BRANCH_FAST"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method NODE"),
     Method (Options::GEDMethod::IPFP, "BP_BEAM", true, " --ls-initialization-method STAR"),
+
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_FAST"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BRANCH_UNIFORM"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method BIPARTITE"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method NODE"),
     Method (Options::GEDMethod::IPFP, "REFINE", true, " --ls-initialization-method STAR"),
-    Method (Options::GEDMethod::IPFP, "STAR", true),
+
+    Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM2", true),
+    Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM3", true),
+    Method (Options::GEDMethod::IPFP, "BRANCH_UNIFORM4", true),
+
+    Method (Options::GEDMethod::IPFP, "STAR2", true),
+    Method (Options::GEDMethod::IPFP, "STAR3", true),
     Method (Options::GEDMethod::IPFP, "STAR4", true),
     Method (Options::GEDMethod::IPFP, "STAR6", true),
+    Method (Options::GEDMethod::IPFP, "STAR7", true),
+    Method (Options::GEDMethod::IPFP, "STAR8", true),
+
+    Method (Options::GEDMethod::IPFP, "REP_TREE", true),
+    Method (Options::GEDMethod::IPFP, "REP_TREE_2", true),
+    Method (Options::GEDMethod::IPFP, "REP_TREE_3", true),
+    Method (Options::GEDMethod::IPFP, "J48", true),
+    Method (Options::GEDMethod::IPFP, "J48_2", true),
+    Method (Options::GEDMethod::IPFP, "J48_3", true),
+    Method (Options::GEDMethod::IPFP, "J48_4", true),
+    Method (Options::GEDMethod::IPFP, "J48_5", true),
   };
 
-  // compute_statistics();
+  // compute_statistics()
+  // test_lsape_all(lsape_methods, all_datasets);
 
-  // {
-  //   GxlGEDEnv env;
-  //   std::mt19937 rng;
-  //   std::vector<std::string> const node_labels { "A", "B", "C" };
-  //   std::vector<std::string> const edge_labels { "0", "1" };
-
-  //   auto id1 = graph_gen_cluster(env, rng, 19, 4, 1.0, 0.00, node_labels, edge_labels);
-  //   env.save_as_gxl_graph(id1, "../results/_test_graph1.gxl");
-
-  //   auto id2 = graph_gen_cluster(env, rng, 43, 4, 0.8, 0.00, node_labels, edge_labels);
-  //   env.save_as_gxl_graph(id2, "../results/_test_graph2.gxl");
-  // }
-
-  {
-    // GxlGEDEnv env;
-    // ::util::setup_environment("Fingerprint", false, env);
-
-    // GraphStatsMap stats;
-    // graph_stat_compute_all(env, stats);
-
-    // auto const g = env.get_graph(0);
-    // auto const h = env.get_graph(1);
-
-    // for (auto it = env.graph_ids().first; it != env.graph_ids().second - 1; it++) {
-    //   GraphDiff diff_1 = graph_diff_compute(env, stats, it, it + 1);
-    //   GraphDiff diff_2 = graph_diff_compute_temp(env, it, it + 1);
-
-    //   assert(diff_1.node_count == diff_2.node_count);
-    //   assert(diff_1.edge_count == diff_2.edge_count);
-    //   assert(diff_1.avg_node_degree == diff_2.avg_node_degree);
-    //   assert(diff_1.edge_density == diff_2.edge_density);
-    //   assert(diff_1.node_label_count == diff_2.node_label_count);
-    //   assert(diff_1.edge_label_count == diff_2.edge_label_count);
-    // }
-  }
-
-  {
-    std::vector<std::string> const all_datasets = {
-      "Mutagenicity", "AIDS"
-    };
-    std::vector<Method> const methods {
-      Method (Options::GEDMethod::IPFP, "J48_4", true),
-      Method (Options::GEDMethod::IPFP, "REP_TREE_2", true),
-    };
-
-    test_ls_all_datasets(methods, all_datasets);
-    return 0;
-  }
+  test_ls_all_datasets(methods, all_datasets);
+  test_ls_graph_sizes(methods, all_datasets);
 
   // ================================================================
   // GENERATED - CLUSTER
   // ================================================================
-
-  double p_inner_edge = 0.75;
-  double p_outer_edge = 0.02;
   {
     size_t const num_graphs = 50;
     size_t const node_variance = 5;
-    std::vector<size_t> const graph_sizes {
-      20, 30,
-    };
-    std::vector<size_t> const cluster_count {
-      3, 5,
-    };
-    test_ls_cluster_graphs(methods, num_graphs, node_variance, graph_sizes, cluster_count, p_inner_edge, p_outer_edge);
-  }
+    double const pInner = 0.8;
+    double const pOuter = 0.02;
 
-  {
-    size_t const num_graphs = 50;
-    size_t const node_variance = 20;
-    std::vector<size_t> const graph_sizes {
-      30,
-    };
-    std::vector<size_t> const cluster_count {
-      5
-    };
-    test_ls_cluster_graphs(methods, num_graphs, node_variance, graph_sizes, cluster_count, p_inner_edge, p_outer_edge);
+    test_ls_cluster_graphs(methods, num_graphs, node_variance, { 20, 30, 40, 50, 60, 70 }, { 2 }, pInner, pOuter);
+    test_ls_cluster_graphs(methods, num_graphs, node_variance, { 20, 30, 40, 50, 60, 70 }, { 3 }, pInner, pOuter);
+    test_ls_cluster_graphs(methods, num_graphs, node_variance, { 20, 30, 40, 50, 60, 70 }, { 5 }, pInner, pOuter);
+
+    return 0;
   }
 
   // ================================================================
   // GENERATED - POWER
   // ================================================================
-
   {
     size_t const num_graphs = 50;
     size_t const node_variance = 5;
-    std::vector<size_t> const graph_sizes {
-      // 10, 20, 30, 40
-      10, 30,
-    };
-    std::vector<size_t> const edges_per_node {
-      // 2, 3, 4, 5,
-      2, 3,
-    };
-    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, edges_per_node);
+    std::vector<size_t> const graph_sizes { 10, 20, 30, 40, 50, 60 };
+
+    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, { 3 });
+    test_ls_power_graphs(methods, num_graphs, node_variance, graph_sizes, { 5 });
+    test_ls_power_graphs(methods, num_graphs, node_variance, { 20, 30, 40, 50, 60 }, { 10 });
   }
 
   // ================================================================
   // GENERATED - RANDOM
   // ================================================================
-
   {
-    size_t const num_graphs = 50;
+    size_t const num_graphs = 100;
     size_t const node_variance = 5;
-    std::vector<size_t> const graph_sizes {
-      10, 30,
-    };
     std::vector<double> const edge_densities {
-      0.1, 0.2,
+      0.1, 0.2, 0.3, 0.4, 0.5, 0.6
     };
-    test_ls_rand_graphs(methods, num_graphs, node_variance, graph_sizes, edge_densities);
-  }
 
-  // test_ls_graph_sizes();
-  // test_ls_rand_graphs();
-  // test_lsape_all();
+    test_ls_rand_graphs(methods, num_graphs, node_variance, { 10 }, edge_densities);
+    test_ls_rand_graphs(methods, num_graphs, node_variance, { 30 }, edge_densities);
+    test_ls_rand_graphs(methods, num_graphs, node_variance, { 50 }, edge_densities);
+  }
 
   return 0;
 }

@@ -4,6 +4,53 @@
 #include "../util.hpp"
 #include "../graph_statistics.hpp"
 
+void min_max_statistics() {
+  std::vector<std::string> all_datasets = {
+    "AIDS", "Mutagenicity", "Protein", "GREC", "Letter_HIGH", "Fingerprint"
+  };
+
+  auto print_statistics = [](GxlGEDEnv& env, std::string const& dataset) -> void {
+    size_t min_nodes = std::numeric_limits<size_t>::max();
+    size_t max_nodes = 0;
+    double avg_nodes = 0;
+
+    size_t min_edges = std::numeric_limits<size_t>::max();
+    size_t max_edges = 0;
+    double avg_edges = 0;
+
+    for (GEDGraph::GraphID i = env.graph_ids().first; i != env.graph_ids().second; ++i) {
+      auto g = env.get_graph(i);
+
+      if (max_nodes < g.num_nodes)
+        max_nodes = g.num_nodes;
+      if (min_nodes > g.num_nodes)
+        min_nodes = g.num_nodes;
+
+      if (max_edges < g.num_edges)
+        max_edges = g.num_edges;
+      if (min_edges > g.num_edges)
+        min_edges = g.num_edges;
+
+      avg_nodes += static_cast<double>(g.num_nodes);
+      avg_edges += static_cast<double>(g.num_edges);
+    }
+
+    avg_nodes /= static_cast<double>(env.num_graphs());
+    avg_edges /= static_cast<double>(env.num_graphs());
+
+    std::cout << dataset << ", " << std::setprecision(3) << min_nodes << ", " << max_nodes << ", " << avg_nodes
+              << ", " << min_edges << ", " << max_edges << ", " << avg_edges << std::endl;
+  };
+
+  std::cout << "Dataset, min_nodes, max_nodes, avg_nodes, min_edges, max_edges, avg_edges" << std::endl;
+
+  for (auto const& dataset : all_datasets) {
+    GxlGEDEnv env;
+    ::util::setup_environment(dataset, false, env);
+    print_statistics(env, dataset);
+  }
+}
+
 void compute_statistics() {
   std::vector<std::string> all_datasets = {
     "Letter_HIGH", "Mutagenicity", "AIDS", "Protein", "GREC", "Fingerprint",
@@ -56,14 +103,6 @@ void compute_statistics() {
               << "\tedge_density: " << edge_density << std::endl;
   };
 
-  for (auto const& dataset : all_datasets) {
-    GxlGEDEnv env;
-    ::util::setup_environment(dataset, false, env);
-    print_statistics(env, dataset);
-  }
-
-  std::cout << std::endl;
-
   for (auto const& dataset : sized_datasets) {
     std::size_t max_max_size_div_10 = 0;
     if (dataset == "AIDS") 
@@ -78,6 +117,12 @@ void compute_statistics() {
       ::util::setup_environment(dataset, max_size_dev_10, env);
       print_statistics(env, dataset);
     }
+  }
+
+  for (auto const& dataset : all_datasets) {
+    GxlGEDEnv env;
+    ::util::setup_environment(dataset, false, env);
+    print_statistics(env, dataset);
   }
 
   std::cout << std::endl;

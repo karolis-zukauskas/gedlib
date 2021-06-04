@@ -74,6 +74,48 @@ void test_ls_rand_graphs(std::vector<Method> const& methods, size_t num_graphs, 
   }
 }
 
+auto print_statistics = [](GxlGEDEnv& env, std::string const& dataset) -> void {
+    double is_joint = 0.0;
+    double num_nodes = 0.0;
+    double num_edges = 0.0;
+    double avg_degree = 0.0;
+    double edge_density = 0.0;
+    double diameter = 0.0;
+    double radius = 0.0;
+    double min_node_degree = 0.0;
+    double max_node_degree = 0.0;
+
+    for (GEDGraph::GraphID i = env.graph_ids().first; i != env.graph_ids().second; ++i) {
+      GraphStatistics stats = graph_stat_compute_single(env, i);
+
+      is_joint += static_cast<double>(stats.is_joint);
+      num_nodes += static_cast<double>(stats.num_nodes);
+      num_edges += static_cast<double>(stats.num_edges);
+      avg_degree += stats.avg_degree;
+      edge_density += stats.edge_density;
+      diameter += static_cast<double>(stats.diameter);
+      radius += static_cast<double>(stats.radius);
+      min_node_degree += static_cast<double>(stats.min_node_degree);
+      max_node_degree += static_cast<double>(stats.max_node_degree);
+    }
+
+    is_joint /= static_cast<double>(env.num_graphs());
+    num_nodes /= static_cast<double>(env.num_graphs());
+    num_edges /= static_cast<double>(env.num_graphs());
+    avg_degree /= static_cast<double>(env.num_graphs());
+    edge_density /= static_cast<double>(env.num_graphs());
+    diameter /= static_cast<double>(env.num_graphs());
+    radius /= static_cast<double>(env.num_graphs());
+    min_node_degree /= static_cast<double>(env.num_graphs());
+    max_node_degree /= static_cast<double>(env.num_graphs());
+
+
+    std::cout  /*<< std::setprecision(3) */ << dataset << "\tis_joint: " << is_joint << "\tdiameter: " << diameter
+              << "\tradius: " << radius << "\tmin_node_degree: " << min_node_degree << "\tmax_node_degree: " << max_node_degree
+              << "\tnum_nodes: " << num_nodes << "\tnum_edges: " << num_edges << "\tavg_degree: " << avg_degree
+              << "\tedge_density: " << edge_density << std::endl << std::endl;
+  };
+
 void test_ls_power_graphs(std::vector<Method> const& methods, size_t num_graphs, size_t node_variance,
   std::vector<size_t> const& graph_sizes, std::vector<size_t> const& edges_per_node) {
 
@@ -101,6 +143,10 @@ void test_ls_power_graphs(std::vector<Method> const& methods, size_t num_graphs,
 
           ::util::setup_generated_environment(env);
         };
+
+        // GxlGEDEnv env;
+        // generate_graphs(env);
+        // print_statistics(env, dataset);
 
         run_on_generated_dataset(methods, generate_graphs, dataset, static_cast<double>(edges), false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
       } catch (const std::exception & error) {
@@ -137,6 +183,10 @@ void test_ls_cluster_graphs(std::vector<Method> const& methods, size_t num_graph
 
           ::util::setup_generated_environment(env);
         };
+
+        // GxlGEDEnv env;
+        // generate_graphs(env);
+        // print_statistics(env, dataset);
 
         run_on_generated_dataset(methods, generate_graphs, dataset, static_cast<double>(0.0), false, TEST_ONLY_UNIQUE_PAIRS, results_filename);
       } catch (const std::exception & error) {
